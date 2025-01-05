@@ -7,5 +7,5 @@ public interface IUserStripeAction {
 
 	CheckoutBuilder checkout();
 
-	SubscriptionBuilder newSubscribe();
+	SubscriptionBuilder subscribe();
 }

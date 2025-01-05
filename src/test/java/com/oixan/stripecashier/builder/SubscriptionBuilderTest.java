@@ -107,7 +107,7 @@ public class SubscriptionBuilderTest {
         customerManager.setUser(userMock);
     }
 	 
-	@Test
+	  @Test
     void testCreateSubscriptionExistingCustomerAndDefaultPaymentMethod() throws StripeException {
         // Step 1: Initialize PaymentMethodsManager and add a payment method
         Map<String, Object> options = new HashMap<>();
@@ -134,9 +134,27 @@ public class SubscriptionBuilderTest {
 
         // Step 4: Initialize SubscriptionBuilder and create a subscription
         IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        userStripe.newSubscribe()
+        userStripe.subscribe()
                   .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-                  .subscribe(options, null, null);
+                  .start( null, null);
+    }
+
+
+    @Test
+    void testCreateSubscriptionNewCustomerAndNewPaymentMethod() throws StripeException {
+        // Step 1: Initialize PaymentMethodsManager and add a payment method
+        Map<String, Object> options = new HashMap<>();
+        options.put("description", "Test new customer with new subscription");
+        options.put("email", "subscription@live.it");
+
+        // Define a test payment method ID (e.g., a Visa card ID)
+        String firstPaymentMethodId = "pm_card_visa";
+
+        // Step 2: Initialize SubscriptionBuilder and create a new user and new subscription
+        IUserStripeAction userStripe = UserStripeFactory.create(userMock);
+        userStripe.subscribe()
+                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
+                  .startAndCreateStripeUserAndPaymentMethod(options, null, firstPaymentMethodId);
     }
 
 }

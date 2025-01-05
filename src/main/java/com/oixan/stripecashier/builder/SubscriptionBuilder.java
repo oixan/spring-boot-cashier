@@ -7,6 +7,7 @@ import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentMethod;
 import com.stripe.model.Subscription;
 import com.stripe.param.SubscriptionCreateParams.Item;
 import com.stripe.param.SubscriptionCreateParams;
@@ -31,6 +32,28 @@ public class SubscriptionBuilder {
         this.priceId = priceId;
         return this;
     }
+
+
+    /**
+     * Creates a subscription to an existing product on Stripe.
+     *
+     * @param customerOptions    The customer options for the subscription
+     * @param subscriptionOptions The options for the subscription, including product and price
+     * @param paymentMethod      The payment method (optional)
+     * @return The created subscription
+     * @throws StripeException If an error occurs during creation
+     */
+    public Subscription startAndCreateStripeUserAndPaymentMethod(Map<String, Object> customerOptions, Map<String, Object> subscriptionOptions, String paymentMethod) throws StripeException {
+      customerManager.createOrGetStripeCustomer(customerOptions);
+
+      if (paymentMethod == null || paymentMethod.isEmpty()) {
+        throw new IllegalArgumentException("Payment method is required.");
+      }
+
+      PaymentMethod pm = paymentMethodsManager.addPaymentMethod(paymentMethod);
+
+      return start(subscriptionOptions, pm.getId());
+    }
 	
     /**
      * Creates a subscription to an existing product on Stripe.
@@ -41,8 +64,8 @@ public class SubscriptionBuilder {
      * @return The created subscription
      * @throws StripeException If an error occurs during creation
      */
-    public Subscription subscribe(Map<String, Object> customerOptions, Map<String, Object> subscriptionOptions, String paymentMethod) throws StripeException {
-      Customer stripeCustomer = customerManager.createOrGetStripeCustomer(customerOptions);
+    public Subscription start(Map<String, Object> subscriptionOptions, String paymentMethod) throws StripeException {
+      Customer stripeCustomer = customerManager.asStripeCustomer();
 
       if (stripeCustomer == null) {
           throw new IllegalArgumentException("Customer is required.");
@@ -56,7 +79,7 @@ public class SubscriptionBuilder {
         subscriptionOptions = Map.of();
       }
 
-      String paymentMethodId = "";
+      String paymentMethodId = paymentMethod;
       if (paymentMethod == null || paymentMethod.isEmpty()) {
           paymentMethodId = paymentMethodsManager.defaultPaymentMethod().getId();
           if (paymentMethodId == null) {

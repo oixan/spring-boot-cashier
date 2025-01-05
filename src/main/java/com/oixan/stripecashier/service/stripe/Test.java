@@ -29,9 +29,9 @@ public class Test {
 				.setQuantity(1)
 				.complete();
 
-		userStripe.newSubscribe()
+		userStripe.subscribe()
 						.setPriceId("idprice")
-						.subscribe(null, null, null);
+						.start( null, null);
 	}
 }
 

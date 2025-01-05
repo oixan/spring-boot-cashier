@@ -30,7 +30,7 @@ public class UserStripeActionProxy implements InvocationHandler{
 	        if ("checkout".equals(method.getName())) {
 	        	return checkoutBuilder.setUser(target);
 	        }
-					if ("newSubscribe".equals(method.getName())) {
+					if ("subscribe".equals(method.getName())) {
 	        	return subscriptionBuilder;
 	        }
 	        return method.invoke(target, args); 
