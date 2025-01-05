@@ -1,5 +1,6 @@
 package com.oixan.stripecashier.manager;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.oixan.stripecashier.builder.StripeBuilder;
@@ -50,6 +51,10 @@ public class CustomerManager {
             return this.user.getStripeId();
         }
 
+        if (options == null) {
+            options = new HashMap<>();
+        }
+
         if (!options.containsKey("name") && this.user.getName() != null) {
             options.put("name",  this.user.getName());
         }
@@ -86,7 +91,45 @@ public class CustomerManager {
         return this.user.getStripeId();
     }
 	
+
+    /**
+     * Retrieve the Stripe customer object using the Stripe customer ID.
+     *
+     * @return Customer|null The Stripe customer object or null if not found
+     * @throws StripeException if an error occurs while retrieving the customer
+     */
+    public Customer asStripeCustomer() throws StripeException {
+        if (this.user.getStripeId() == null || this.user.getStripeId().isEmpty()) {
+            return null;
+        }
+
+        return Customer.retrieve(this.user.getStripeId());
+    }
+
+
+    /**
+     * Create or retrieve the Stripe customer.
+     *
+     * @param options A map containing optional parameters like name, email, phone, etc.
+     * @return Customer The Stripe customer object
+     * @throws StripeException if an error occurs while creating or retrieving the customer
+     */
+    public Customer createOrGetStripeCustomer(Map<String, Object> options) throws StripeException {
+        if (this.hasStripeId()) {
+            return this.asStripeCustomer();
+        } else {
+            this.createAsStripeCustomer(options);
+            return this.asStripeCustomer();
+        }
+    }
+
     
+    /**
+     * Sets the user for the CustomerManager.
+     *
+     * @param user the IUserStripe instance to be set
+     * @return the current instance of CustomerManager
+     */
 	public CustomerManager setUser(IUserStripe user) {
 		this.user = user;
 		return this;

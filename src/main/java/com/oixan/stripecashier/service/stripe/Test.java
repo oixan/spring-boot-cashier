@@ -28,6 +28,10 @@ public class Test {
 				.setPriceId("idprice")
 				.setQuantity(1)
 				.complete();
+
+		userStripe.newSubscribe()
+						.setPriceId("idprice")
+						.subscribe(null, null, null);
 	}
 }
 

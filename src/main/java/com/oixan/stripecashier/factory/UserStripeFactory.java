@@ -2,6 +2,7 @@ package com.oixan.stripecashier.factory;
 
 import com.oixan.stripecashier.builder.CheckoutBuilder;
 import com.oixan.stripecashier.builder.StripeBuilder;
+import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
@@ -17,7 +18,10 @@ public class UserStripeFactory{
 		CheckoutBuilder checkoutBuilder = new CheckoutBuilder(
 				new StripeBuilder(StripeProperties.instance())
 			);
-		return UserStripeActionProxy.createProxy(model, checkoutBuilder);	
+
+		SubscriptionBuilder subscriptionBuilder = SubscriptionBuilderFactory.create(model);
+		
+		return UserStripeActionProxy.createProxy(model, checkoutBuilder, subscriptionBuilder);	
 	}
 
 }
