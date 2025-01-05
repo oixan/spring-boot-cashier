@@ -2,12 +2,8 @@ package com.oixan.stripecashier.manager;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 
@@ -51,7 +47,7 @@ public class CustomerManager {
      */
     public String createAsStripeCustomer(Map<String, Object> options){
         if (this.hasStripeId()) {
-            throw new IllegalStateException("Customer already exists with Stripe ID: " + this.user.getStripeId());
+            return this.user.getStripeId();
         }
 
         if (!options.containsKey("name") && this.user.getName() != null) {
