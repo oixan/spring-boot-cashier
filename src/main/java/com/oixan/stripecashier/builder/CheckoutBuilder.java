@@ -89,6 +89,8 @@ public class CheckoutBuilder {
 			return cancelURL;
 		}
 
+        System.out.println("Session url: " + session.getUrl());
+		
         return session.getUrl();
     }
     

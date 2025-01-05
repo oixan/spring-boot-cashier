@@ -2,8 +2,6 @@ package com.oixan.stripecashier.builder;
 
 import java.util.function.BiFunction;
 
-import org.springframework.stereotype.Component;
-
 import com.oixan.stripecashier.config.StripeProperties;
 import com.stripe.Stripe;
 
