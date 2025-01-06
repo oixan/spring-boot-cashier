@@ -38,4 +38,8 @@ public class SubscriptionService {
     public void deleteSubscriptionByStripeId(String id) {
         subscriptionRepository.deleteByStripeId(id);
     }
+
+    public void updateSubscriptionEndsAt(Long id, String endsAt) {
+        subscriptionRepository.updateEndsAt(id, endsAt);
+    }
 }

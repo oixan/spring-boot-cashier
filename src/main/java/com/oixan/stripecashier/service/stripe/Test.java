@@ -33,6 +33,7 @@ public class Test {
 
 		userStripe.subscribe()
 						.setPriceId("idprice")
+						//.setTrialDay(30)
 						.start();
 		
 
@@ -43,6 +44,13 @@ public class Test {
 
 		userStripe.subscription()
 				.cancelAtPeriodEnd("default");
+
+		userStripe.subscription()
+				.onTrial("default");
+
+		userStripe.subscription()
+				.ended();
+
 	}
 }
 

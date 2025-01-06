@@ -36,4 +36,13 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
      * @param stripeId the Stripe ID of the subscription.
      */
     void deleteByStripeId(String stripeId);
+
+
+    /**
+     * Updates the ends_at field of a subscription.
+     *
+     * @param id     the ID of the subscription.
+     * @param endsAt the new value for the ends_at field.
+     */
+    void updateEndsAt(Long id, String endsAt);
 }

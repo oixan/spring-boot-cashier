@@ -1,5 +1,7 @@
 package com.oixan.stripecashier.builder;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -14,13 +16,37 @@ import com.stripe.param.SubscriptionCreateParams.Item;
 import com.stripe.param.SubscriptionCreateParams;
 
 public class SubscriptionBuilder {
-	
+
+    /*
+     * The customer manager.
+     */
     private final CustomerManager customerManager;
+
+
+    /*
+     * The payment methods manager.
+     */
     private final PaymentMethodsManager paymentMethodsManager;
 
+
+    /*
+     * The price ID for the subscription.
+     */
     private String priceId;
 
+
+    /**
+     * The trial end date for the subscription.
+     */
+    private Instant trialExpires;
+
     
+    /**
+     * Creates a new instance of the SubscriptionBuilder.
+     *
+     * @param customerManager The customer manager
+     * @param paymentMethodsManager The payment methods manager
+     */
     public SubscriptionBuilder(
       CustomerManager customerManager,
       PaymentMethodsManager paymentMethodsManager
@@ -29,8 +55,47 @@ public class SubscriptionBuilder {
       this.paymentMethodsManager = paymentMethodsManager;
     }
 
+
+    /**
+     * Sets the trial end date for the subscription.
+     *
+     * @param trialExpires The trial end date
+     * @return The current instance of the SubscriptionBuilder
+     */
     public SubscriptionBuilder setPriceId(String priceId) {
         this.priceId = priceId;
+        return this;
+    }
+
+    
+    /**
+     * Sets the trial end date for the subscription.
+     * 
+     * @param days
+     * @return The current instance of the SubscriptionBuilder
+     */
+    public SubscriptionBuilder setTrialDay(int days) {
+      if (days < 1) {
+          throw new IllegalArgumentException("Trial days must be greater than 0.");
+      }
+
+      this.trialExpires = Instant.now().plusSeconds(days * 24 * 60 * 60);
+      return this;
+    }
+
+
+    /**
+     * Sets the trial end date for the subscription.
+     * 
+     * @param trialExpires
+     * @return The current instance of the SubscriptionBuilder
+     */
+    public SubscriptionBuilder setTrialExpireDate(Instant trialExpires) {
+        if (trialExpires.isBefore(Instant.now())) {
+            throw new IllegalArgumentException("Trial expiration date must be in the future.");
+        }
+
+        this.trialExpires = trialExpires;
         return this;
     }
 
@@ -61,6 +126,7 @@ public class SubscriptionBuilder {
       return start(subscriptionOptions, pm.getId(), type);
     }
 
+
     /**
      * Creates a subscription to an existing product on Stripe.
      *
@@ -70,7 +136,7 @@ public class SubscriptionBuilder {
     public Subscription start() throws StripeException { 
       return start(null, null, null);
     }
-	
+  
 
     /**
      * Creates a subscription to an existing product on Stripe.
@@ -117,16 +183,18 @@ public class SubscriptionBuilder {
               .setQuantity(1L)
               .build();
 
+      Map<String, Object> updatedSubscriptionOptions = addAdditionalOptions(subscriptionOptions);
+
       SubscriptionCreateParams params = SubscriptionCreateParams.builder()
-              .setCustomer(stripeCustomer.getId())
-              .setDefaultPaymentMethod(paymentMethodId) 
-              .addItem(item)  
-              .putAllMetadata(subscriptionOptions.entrySet().stream()
-                      .collect(Collectors.toMap(
-                              Map.Entry::getKey,
-                              e -> String.valueOf(e.getValue())
-                      )))
-              .build();
+          .setCustomer(stripeCustomer.getId())
+          .setDefaultPaymentMethod(paymentMethodId) 
+          .addItem(item)  
+          .putAllMetadata(updatedSubscriptionOptions.entrySet().stream()
+              .collect(Collectors.toMap(
+              Map.Entry::getKey,
+              e -> String.valueOf(e.getValue())
+              )))
+          .build();
 
       try {
         Subscription stripeSubscription = Subscription.create(params);
@@ -138,13 +206,60 @@ public class SubscriptionBuilder {
           throw new RuntimeException("Failed to create subscription on Stripe", e);
       }
   }
+    
 
+  /**
+  * Adds additional options to the subscription.
+  * 
+  * @param options The options to be added
+  * @return The updated options
+  */
+  private Map<String, Object> addAdditionalOptions(Map<String, Object> options) {
+    Map<String, Object> updatedOptions = options;
+
+    if (updatedOptions == null) {
+      updatedOptions = Map.of();
+    }
+
+    updatedOptions.put("expand", List.of("latest_invoice.payment_intent"));
+    updatedOptions.put("promotion_code", null);
+    updatedOptions.put("trial_end", this.getTrialEndForSubscription());
+    
+    return updatedOptions;
+  }
+
+
+  /**
+   * Gets the trial end date for the subscription.
+   * 
+   * @return The trial end date
+   */
+  private String getTrialEndForSubscription() {
+    if (this.trialExpires != null) {
+          return String.valueOf(this.trialExpires.getEpochSecond());
+    }
+    return null;
+  }
+
+
+  /**
+   * Saves the subscription to the database.
+   * 
+   * @param stripeSubscription The Stripe subscription
+   * @param type The type of subscription
+   */
   private void saveSubscription(Subscription stripeSubscription, String type) {
     com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
+
     subscription.setUserId(customerManager.stripeId());
     subscription.setType(type);
     subscription.setStripeId(stripeSubscription.getId());
     subscription.setStripeStatus(stripeSubscription.getStatus());
+    subscription.setStripePrice(stripeSubscription.getItems().getData().get(0).getPrice().getId());
+    subscription.setQuantity(stripeSubscription.getItems().getData().get(0).getQuantity());
+    subscription.setTrialEndsAt(null);
+    subscription.setEndsAt(null);
+
     SubscriptionServiceFactory.create()
                         .createSubscription(subscription);
   }
