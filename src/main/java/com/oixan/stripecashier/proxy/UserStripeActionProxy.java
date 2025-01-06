@@ -8,6 +8,8 @@ import com.oixan.stripecashier.builder.CheckoutBuilder;
 import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
+import com.oixan.stripecashier.manager.CustomerManager;
+import com.oixan.stripecashier.manager.PaymentMethodsManager;
 import com.oixan.stripecashier.manager.SubscriptionManager;
 
 public class UserStripeActionProxy implements InvocationHandler{
@@ -16,17 +18,23 @@ public class UserStripeActionProxy implements InvocationHandler{
 	    private final CheckoutBuilder checkoutBuilder;
 			private final SubscriptionBuilder subscriptionBuilder;
 			private final SubscriptionManager subscriptionManager;
+			private final CustomerManager customerManager;
+			private final PaymentMethodsManager paymentMethodsManager;
 
 	    public UserStripeActionProxy(
 	    		IUserStripe target, 
 	    		CheckoutBuilder checkoutBuilder,
 					SubscriptionBuilder subscriptionBuilder,
-					SubscriptionManager subscriptionManager
+					SubscriptionManager subscriptionManager,
+					CustomerManager customerManager,
+					PaymentMethodsManager paymentMethodsManager
 	    ) {
 	        this.target = target;
 	        this.checkoutBuilder = checkoutBuilder;
 					this.subscriptionBuilder = subscriptionBuilder;
 					this.subscriptionManager = subscriptionManager;
+					this.customerManager = customerManager;
+					this.paymentMethodsManager = paymentMethodsManager;
 	    }
 
 	    @Override
@@ -43,6 +51,12 @@ public class UserStripeActionProxy implements InvocationHandler{
 					if ("subscription".equals(method.getName())) {
 	        	return subscriptionManager;
 	        }
+					if ("customer".equals(method.getName())) {
+	        	return customerManager;
+	        }
+					if ("paymentMethod".equals(method.getName())) {
+	        	return paymentMethodsManager;
+	        }
 	        return method.invoke(target, args); 
 	    }
 
@@ -50,12 +64,15 @@ public class UserStripeActionProxy implements InvocationHandler{
 	    		IUserStripe target,
 	    		CheckoutBuilder checkoutBuilder,
 					SubscriptionBuilder subscriptionBuilder,
-					SubscriptionManager subscriptionManager
+					SubscriptionManager subscriptionManager,
+					CustomerManager customerManager,
+					PaymentMethodsManager paymentMethodsManager
 	    ) {
 	        return (IUserStripeAction) Proxy.newProxyInstance(
 	            target.getClass().getClassLoader(),
 	            new Class[]{IUserStripeAction.class},
-	            new UserStripeActionProxy(target, checkoutBuilder, subscriptionBuilder, subscriptionManager)
+	            new UserStripeActionProxy(
+								target, checkoutBuilder, subscriptionBuilder, subscriptionManager, customerManager, paymentMethodsManager)
 	        );
 	    }
 }
