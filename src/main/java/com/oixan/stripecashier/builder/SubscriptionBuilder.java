@@ -3,6 +3,7 @@ package com.oixan.stripecashier.builder;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
 import com.stripe.exception.StripeException;
@@ -55,6 +56,7 @@ public class SubscriptionBuilder {
       return start(subscriptionOptions, pm.getId());
     }
 	
+
     /**
      * Creates a subscription to an existing product on Stripe.
      *
@@ -104,11 +106,20 @@ public class SubscriptionBuilder {
               .build();
 
       try {
-          return Subscription.create(params);
+        Subscription stripeSubscription = Subscription.create(params);
+
+        com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
+        subscription.setUserId(customerManager.stripeId());
+        subscription.setType("basic");
+        subscription.setStripeId(stripeSubscription.getId());
+        subscription.setStripeStatus(stripeSubscription.getStatus());
+        SubscriptionServiceFactory.create()
+                          	.createSubscription(subscription);
+                
+        return stripeSubscription;
       } catch (Exception e) {
           throw new RuntimeException("Failed to create subscription on Stripe", e);
       }
   }
 
-  
 }

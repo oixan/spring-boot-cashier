@@ -33,6 +33,9 @@ public class UserStripeActionProxy implements InvocationHandler{
 					if ("subscribe".equals(method.getName())) {
 	        	return subscriptionBuilder;
 	        }
+					if ("getUserStripe".equals(method.getName())) {
+	        	return target;
+	        }
 	        return method.invoke(target, args); 
 	    }
 

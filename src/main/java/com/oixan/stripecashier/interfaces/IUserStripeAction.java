@@ -8,4 +8,6 @@ public interface IUserStripeAction {
 	CheckoutBuilder checkout();
 
 	SubscriptionBuilder subscribe();
+
+	IUserStripe getUserStripe();
 }

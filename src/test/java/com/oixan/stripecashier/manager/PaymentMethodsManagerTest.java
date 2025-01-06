@@ -160,10 +160,6 @@ public class PaymentMethodsManagerTest {
 	    PaymentMethodCollection paymentMethods = PaymentMethod.list(params);
 	    assertTrue(paymentMethods.getData().size() >= 2, 
 	        "Customer should have at least two payment methods");
-
-	    // Output per debug
-	    System.out.println("First Payment Method: " + firstPaymentMethod.getId());
-	    System.out.println("Second Payment Method: " + secondPaymentMethod.getId());
 	}
 
 	

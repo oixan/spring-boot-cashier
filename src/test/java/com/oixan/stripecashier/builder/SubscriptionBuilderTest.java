@@ -1,19 +1,24 @@
 package com.oixan.stripecashier.builder;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
+import com.oixan.stripecashier.config.AppConfig;
 import com.oixan.stripecashier.config.StripeProperties;
+import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
@@ -21,10 +26,13 @@ import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
+import com.stripe.model.Subscription;
 
 @Configuration
-@ComponentScan(basePackages = "com.oixan.stripecashier.manager")
-@TestPropertySource(locations = "classpath:application.properties")
+@ComponentScan(basePackages = "com.oixan.stripecashier.*")
+@TestPropertySource(locations = "classpath:application.properties", properties = "spring.profiles.active=test")
+@SpringBootTest(classes = AppConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SubscriptionBuilderTest {
   
 	 private CustomerManager customerManager;
@@ -107,7 +115,8 @@ public class SubscriptionBuilderTest {
         customerManager.setUser(userMock);
     }
 	 
-	  @Test
+	 
+	@Test
     void testCreateSubscriptionExistingCustomerAndDefaultPaymentMethod() throws StripeException {
         // Step 1: Initialize PaymentMethodsManager and add a payment method
         Map<String, Object> options = new HashMap<>();
@@ -134,9 +143,16 @@ public class SubscriptionBuilderTest {
 
         // Step 4: Initialize SubscriptionBuilder and create a subscription
         IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        userStripe.subscribe()
-                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-                  .start( null, null);
+        Subscription subscriptionStripe = userStripe.subscribe()
+									                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
+									                  .start( null, null);
+
+        assertNotNull(subscriptionStripe);                                              
+       
+
+        Optional<com.oixan.stripecashier.entity.Subscription> foundSubscription = SubscriptionServiceFactory.create().getSubscriptionByUserIdAndType(stripeId, "basic");
+        assertTrue(foundSubscription.isPresent());
+        assertEquals(subscriptionStripe.getId(), foundSubscription.get().getStripeId());
     }
 
 
@@ -152,9 +168,15 @@ public class SubscriptionBuilderTest {
 
         // Step 2: Initialize SubscriptionBuilder and create a new user and new subscription
         IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        userStripe.subscribe()
-                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-                  .startAndCreateStripeUserAndPaymentMethod(options, null, firstPaymentMethodId);
+        Subscription subscriptionStripe = userStripe.subscribe()
+                                                .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
+                                                .startAndCreateStripeUserAndPaymentMethod(options, null, firstPaymentMethodId);
+        
+        assertNotNull(subscriptionStripe);
+
+        Optional<com.oixan.stripecashier.entity.Subscription> foundSubscription = SubscriptionServiceFactory.create().getSubscriptionByUserIdAndType(userStripe.getUserStripe().getStripeId(), "basic");
+        assertTrue(foundSubscription.isPresent());
+        assertEquals(subscriptionStripe.getId(), foundSubscription.get().getStripeId());
     }
 
 }

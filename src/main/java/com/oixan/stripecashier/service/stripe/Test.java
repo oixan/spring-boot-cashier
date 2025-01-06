@@ -1,13 +1,21 @@
 package com.oixan.stripecashier.service.stripe;
 
+import java.util.Optional;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.oixan.stripecashier.config.AppConfig;
+import com.oixan.stripecashier.entity.Subscription;
 import com.oixan.stripecashier.factory.CustomerManagerFactory;
 import com.oixan.stripecashier.factory.PaymentMethodsManagerFactory;
+import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
 import com.oixan.stripecashier.manager.CustomerManager;
+import com.oixan.stripecashier.service.SubscriptionService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 
@@ -30,8 +38,14 @@ public class Test {
 				.complete();
 
 		userStripe.subscribe()
-						.setPriceId("idprice")
-						.start( null, null);
+				.setPriceId("idprice")
+				.start( null, null);
+		
+		
+		 SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+
+         Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
+         subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
 	}
 }
 
