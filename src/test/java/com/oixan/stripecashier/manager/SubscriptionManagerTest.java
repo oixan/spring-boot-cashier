@@ -1,12 +1,10 @@
 package com.oixan.stripecashier.manager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +17,9 @@ import org.springframework.test.context.TestPropertySource;
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.config.AppConfig;
 import com.oixan.stripecashier.config.StripeProperties;
-import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
-import com.oixan.stripecashier.manager.CustomerManager;
-import com.oixan.stripecashier.manager.PaymentMethodsManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.Subscription;
@@ -118,10 +113,10 @@ public class SubscriptionManagerTest {
 	 
 	 
 	@Test
-    void testDeleteSubscriptionDefaultType() throws StripeException {
+    void testSubscriptionCancelAtPeriodEndDefaultType() throws StripeException {
         // Step 1: Initialize PaymentMethodsManager and add a payment method
         Map<String, Object> options = new HashMap<>();
-        options.put("description", "Test existing customer new subscription");
+        options.put("description", "Test deleteing at c subscription");
         options.put("email", "subscription@live.it");
         String stripeId = customerManager.createAsStripeCustomer(options);
 
@@ -148,8 +143,13 @@ public class SubscriptionManagerTest {
                 .start();
        
         // Step 5: Delete the subscription
-        userStripe.subscription()
-        		  .cancelAtPeriodEnd();
+        Subscription  stripeSubscriptionCancelled = userStripe.subscription()
+                                                                .cancelAtPeriodEnd();
+
+        System.out.println("Subscription cancelled: " + stripeSubscriptionCancelled.getId()); 
+
+        assertNotNull(stripeSubscriptionCancelled);
+        assertTrue(stripeSubscriptionCancelled.getCancelAtPeriodEnd());
     }
 
 }
