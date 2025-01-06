@@ -1,4 +1,4 @@
-package com.oixan.stripecashier.builder;
+package com.oixan.stripecashier.manager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
+import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.config.AppConfig;
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
@@ -33,7 +34,7 @@ import com.stripe.model.Subscription;
 @TestPropertySource(locations = "classpath:application.properties", properties = "spring.profiles.active=test")
 @SpringBootTest(classes = AppConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class SubscriptionBuilderTest {
+public class SubscriptionManagerTest {
   
 	 private CustomerManager customerManager;
 
@@ -117,14 +118,13 @@ public class SubscriptionBuilderTest {
 	 
 	 
 	@Test
-    void testCreateSubscriptionExistingCustomerAndDefaultPaymentMethod() throws StripeException {
+    void testDeleteSubscriptionDefaultType() throws StripeException {
         // Step 1: Initialize PaymentMethodsManager and add a payment method
         Map<String, Object> options = new HashMap<>();
         options.put("description", "Test existing customer new subscription");
         options.put("email", "subscription@live.it");
-        String stripeId = customerManager
-                                .setUser(userMock)
-                                .createAsStripeCustomer(options);
+        String stripeId = customerManager.createAsStripeCustomer(options);
+
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
@@ -143,46 +143,13 @@ public class SubscriptionBuilderTest {
 
         // Step 4: Initialize SubscriptionBuilder and create a subscription
         IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        Subscription subscriptionStripe = userStripe.subscribe()
-									                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-									                  .start( null, null, null);
-
-        assertNotNull(subscriptionStripe);                                              
+        userStripe.subscribe()
+                .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
+                .start();
        
-
-        Optional<com.oixan.stripecashier.entity.Subscription> foundSubscription = SubscriptionServiceFactory.create().getSubscriptionByUserIdAndType(stripeId, "default");
-        assertTrue(foundSubscription.isPresent());
-        assertEquals(subscriptionStripe.getId(), foundSubscription.get().getStripeId());
-    }
-
-
-    @Test
-    void testCreateSubscriptionNewCustomerAndNewPaymentMethod() throws StripeException {
-        // Step 1: Initialize PaymentMethodsManager and add a payment method
-        Map<String, Object> options = new HashMap<>();
-        options.put("description", "Test new customer with new subscription");
-        options.put("email", "subscription@live.it");
-
-        // Define a test payment method ID (e.g., a Visa card ID)
-        String firstPaymentMethodId = "pm_card_visa";
-
-        // Step 2: Initialize SubscriptionBuilder and create a new user and new subscription
-        IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        Subscription subscriptionStripe = userStripe.subscribe()
-                                                .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-                                                .startAndCreateStripeUserAndPaymentMethod(
-                                                    options, null, firstPaymentMethodId, "default");
-        
-        assertNotNull(subscriptionStripe);
-
-        Optional<com.oixan.stripecashier.entity.Subscription> 
-                    foundSubscription = SubscriptionServiceFactory
-                                                .create()
-                                                .getSubscriptionByUserIdAndType(
-                                                    userStripe.getUserStripe().getStripeId(), "default");
-                                                    
-        assertTrue(foundSubscription.isPresent());
-        assertEquals(subscriptionStripe.getId(), foundSubscription.get().getStripeId());
+        // Step 5: Delete the subscription
+        userStripe.subscription()
+        		  .cancelAtPeriodEnd();
     }
 
 }

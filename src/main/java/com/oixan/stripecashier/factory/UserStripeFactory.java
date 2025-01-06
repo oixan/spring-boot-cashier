@@ -6,6 +6,7 @@ import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
+import com.oixan.stripecashier.manager.SubscriptionManager;
 import com.oixan.stripecashier.proxy.UserStripeActionProxy;
 
 public class UserStripeFactory{
@@ -20,8 +21,10 @@ public class UserStripeFactory{
 			);
 
 		SubscriptionBuilder subscriptionBuilder = SubscriptionBuilderFactory.create(model);
+
+		SubscriptionManager subscriptionManager = SubscriptionManagerFactory.create(model);
 		
-		return UserStripeActionProxy.createProxy(model, checkoutBuilder, subscriptionBuilder);	
+		return UserStripeActionProxy.createProxy(model, checkoutBuilder, subscriptionBuilder, subscriptionManager);	
 	}
 
 }

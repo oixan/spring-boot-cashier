@@ -44,7 +44,12 @@ public class SubscriptionBuilder {
      * @return The created subscription
      * @throws StripeException If an error occurs during creation
      */
-    public Subscription startAndCreateStripeUserAndPaymentMethod(Map<String, Object> customerOptions, Map<String, Object> subscriptionOptions, String paymentMethod) throws StripeException {
+    public Subscription startAndCreateStripeUserAndPaymentMethod(
+      Map<String, Object> customerOptions, 
+      Map<String, Object> subscriptionOptions, 
+      String paymentMethod,
+      String type
+    ) throws StripeException {
       customerManager.createOrGetStripeCustomer(customerOptions);
 
       if (paymentMethod == null || paymentMethod.isEmpty()) {
@@ -53,7 +58,17 @@ public class SubscriptionBuilder {
 
       PaymentMethod pm = paymentMethodsManager.addPaymentMethod(paymentMethod);
 
-      return start(subscriptionOptions, pm.getId());
+      return start(subscriptionOptions, pm.getId(), type);
+    }
+
+    /**
+     * Creates a subscription to an existing product on Stripe.
+     *
+     * @return The created subscription
+     * @throws StripeException If an error occurs during creation
+     */
+    public Subscription start() throws StripeException { 
+      return start(null, null, null);
     }
 	
 
@@ -66,11 +81,19 @@ public class SubscriptionBuilder {
      * @return The created subscription
      * @throws StripeException If an error occurs during creation
      */
-    public Subscription start(Map<String, Object> subscriptionOptions, String paymentMethod) throws StripeException {
+    public Subscription start(
+      Map<String, Object> subscriptionOptions, 
+      String paymentMethod,
+      String type
+    ) throws StripeException {
       Customer stripeCustomer = customerManager.asStripeCustomer();
 
       if (stripeCustomer == null) {
           throw new IllegalArgumentException("Customer is required.");
+      }
+
+      if (type == null || type.isEmpty()) {
+          type = "default";
       }
 
       if (priceId == null) {
@@ -108,18 +131,22 @@ public class SubscriptionBuilder {
       try {
         Subscription stripeSubscription = Subscription.create(params);
 
-        com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
-        subscription.setUserId(customerManager.stripeId());
-        subscription.setType("basic");
-        subscription.setStripeId(stripeSubscription.getId());
-        subscription.setStripeStatus(stripeSubscription.getStatus());
-        SubscriptionServiceFactory.create()
-                          	.createSubscription(subscription);
+        saveSubscription(stripeSubscription, type);
                 
         return stripeSubscription;
       } catch (Exception e) {
           throw new RuntimeException("Failed to create subscription on Stripe", e);
       }
+  }
+
+  private void saveSubscription(Subscription stripeSubscription, String type) {
+    com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
+    subscription.setUserId(customerManager.stripeId());
+    subscription.setType(type);
+    subscription.setStripeId(stripeSubscription.getId());
+    subscription.setStripeStatus(stripeSubscription.getStatus());
+    SubscriptionServiceFactory.create()
+                        .createSubscription(subscription);
   }
 
 }

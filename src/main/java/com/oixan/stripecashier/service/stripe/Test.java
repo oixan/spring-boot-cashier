@@ -39,13 +39,15 @@ public class Test {
 
 		userStripe.subscribe()
 				.setPriceId("idprice")
-				.start( null, null);
+				.start();
 		
-		
-		 SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+		SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
 
-         Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
-         subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
+		Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
+		subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
+
+		userStripe.subscription()
+				.cancelAtPeriodEnd("default");
 	}
 }
 
