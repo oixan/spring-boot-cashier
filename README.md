@@ -1,4 +1,5 @@
 # Spring-boot-cashier
+** WORK IN PROGRESS **
 
 Spring Boot Cashier provides an expressive, fluent interface to Stripe's subscription billing services. It handles almost all of the boilerplate subscription billing code you are dreading writing. In addition to basic subscription management, Spring boot Cashier can handle coupons, swapping subscriptions, subscription "quantities", cancellation grace periods.
 
