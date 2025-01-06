@@ -1,5 +1,6 @@
 package com.oixan.stripecashier.manager;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,9 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
-import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.config.AppConfig;
-import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
@@ -31,12 +30,12 @@ import com.stripe.model.Subscription;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SubscriptionManagerTest {
   
-	 private CustomerManager customerManager;
+	private IUserStripe userMock;
 
-	 private IUserStripe userMock;
+    private IUserStripeAction userActionMock;
 	 
 	 @BeforeEach
-	 void setUp() {
+	 void setUp() throws StripeException {
         userMock = new IUserStripe() {
             private String stripeId;
 
@@ -106,50 +105,44 @@ public class SubscriptionManagerTest {
 			}
         };
 
-        StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
-        customerManager = new CustomerManager(stripeBuilder);
-        customerManager.setUser(userMock);
+        userActionMock = UserStripeFactory.create(userMock);
+
+        // Step 1: Initialize PaymentMethodsManager and add a payment method
+        Map<String, Object> options = new HashMap<>();
+        options.put("description", "Test deleteing at customer subscription");
+        options.put("email", "subscription@live.it");
+
+        String stripeId = userActionMock.customer().createAsStripeCustomer(options);
+
+
+        // Step 2: Initialize PaymentMethodsManager and add a payment method
+    	// Define a test payment method ID (e.g., a Visa card ID)
+    	String firstPaymentMethodId = "pm_card_visa";
+
+    	// Add the payment method and assert it is successfully added
+    	PaymentMethod firstPaymentMethod = userActionMock.paymentMethod().addPaymentMethod(firstPaymentMethodId);
+
+    	// Step 3: Set the first payment method as the default
+    	userActionMock.paymentMethod().setDefaultPaymentMethod(firstPaymentMethod);
     }
 	 
 	 
 	@Test
     void testSubscriptionCancelAtPeriodEndDefaultType() throws StripeException {
-        // Step 1: Initialize PaymentMethodsManager and add a payment method
-        Map<String, Object> options = new HashMap<>();
-        options.put("description", "Test deleteing at c subscription");
-        options.put("email", "subscription@live.it");
-        String stripeId = customerManager.createAsStripeCustomer(options);
-
-        assertNotNull(stripeId);
-
-        // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(StripeProperties.instance()))
-    	    .setCustomerManager(customerManager);
-
-    	// Define a test payment method ID (e.g., a Visa card ID)
-    	String firstPaymentMethodId = "pm_card_visa";
-
-    	// Add the payment method and assert it is successfully added
-    	PaymentMethod firstPaymentMethod = paymentMethodsManager.addPaymentMethod(firstPaymentMethodId);
-
-    	// Step 3: Set the first payment method as the default
-    	paymentMethodsManager.setDefaultPaymentMethod(firstPaymentMethod);
-
-
-        // Step 4: Initialize SubscriptionBuilder and create a subscription
-        IUserStripeAction userStripe = UserStripeFactory.create(userMock);
-        userStripe.subscribe()
-                .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
-                .start();
+        
+        // Step 1: Initialize SubscriptionBuilder and create a subscription
+        userActionMock.subscribe()
+                    .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
+                    .start();
        
-        // Step 5: Delete the subscription
-        Subscription  stripeSubscriptionCancelled = userStripe.subscription()
+        // Step 2: Delete the subscription
+        Subscription  stripeSubscriptionCancelled = userActionMock.subscription()
                                                                 .cancelAtPeriodEnd();
-
-        System.out.println("Subscription cancelled: " + stripeSubscriptionCancelled.getId()); 
 
         assertNotNull(stripeSubscriptionCancelled);
         assertTrue(stripeSubscriptionCancelled.getCancelAtPeriodEnd());
+        assertTrue(userActionMock.subscription().onGracePeriod());
+        assertFalse(userActionMock.subscription().ended());
     }
 
 }

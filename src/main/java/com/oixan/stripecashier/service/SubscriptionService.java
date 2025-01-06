@@ -1,5 +1,7 @@
 package com.oixan.stripecashier.service;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +41,7 @@ public class SubscriptionService {
         subscriptionRepository.deleteByStripeId(id);
     }
 
-    public void updateSubscriptionEndsAt(Long id, String endsAt) {
-        subscriptionRepository.updateEndsAt(id, endsAt);
+    public void updateSubscriptionEndsAt(Long id, Instant endsAt) {
+        subscriptionRepository.updateEndsAt(id, endsAt.atZone(ZoneId.systemDefault()).toLocalDateTime());
     }
 }

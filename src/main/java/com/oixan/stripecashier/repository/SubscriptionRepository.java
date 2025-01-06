@@ -1,10 +1,15 @@
 package com.oixan.stripecashier.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.oixan.stripecashier.entity.Subscription;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,5 +49,9 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
      * @param id     the ID of the subscription.
      * @param endsAt the new value for the ends_at field.
      */
-    void updateEndsAt(Long id, String endsAt);
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE subscriptions SET ends_at = :endsAt WHERE id = :id", nativeQuery = true)
+    void updateEndsAt(@Param("id") Long id, @Param("endsAt") LocalDateTime endsAt);
+
 }

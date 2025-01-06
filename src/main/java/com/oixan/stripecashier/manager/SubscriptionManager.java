@@ -1,5 +1,6 @@
 package com.oixan.stripecashier.manager;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class SubscriptionManager {
       Subscription stripeSubscription = Subscription.retrieve(subscriptionEntity.get().getStripeId());
       stripeSubscription = stripeSubscription.update(params);
 
-      updateSubscriptionEndsAt(subscriptionEntity.get().getId(), stripeSubscription.getCurrentPeriodEnd().toString());
+      updateSubscriptionEndsAt(subscriptionEntity.get().getId(), Instant.ofEpochSecond(stripeSubscription.getCurrentPeriodEnd()));
 
       return stripeSubscription;
     }
@@ -145,7 +146,7 @@ public class SubscriptionManager {
       return onTrial("default");
     }
 
-    
+
     /**
      * Determines if the subscription is within its trial period.
      *
@@ -211,7 +212,7 @@ public class SubscriptionManager {
      * @param endsAt the new value for the ends_at field
      * @throws IllegalArgumentException If the ID is null or empty
      */
-    private void updateSubscriptionEndsAt(Long id, String endsAt) {
+    private void updateSubscriptionEndsAt(Long id, Instant endsAt) {
       subscriptionService.updateSubscriptionEndsAt(id, endsAt);
     }
 

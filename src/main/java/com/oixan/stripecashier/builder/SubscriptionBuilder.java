@@ -1,6 +1,7 @@
 package com.oixan.stripecashier.builder;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class SubscriptionBuilder {
         return this;
     }
 
-    
+
     /**
      * Sets the trial end date for the subscription.
      * 
@@ -167,7 +168,7 @@ public class SubscriptionBuilder {
       }
 
       if (subscriptionOptions == null || subscriptionOptions.isEmpty()) {
-        subscriptionOptions = Map.of();
+        subscriptionOptions = new HashMap<>();
       }
 
       String paymentMethodId = paymentMethod;
@@ -218,7 +219,7 @@ public class SubscriptionBuilder {
     Map<String, Object> updatedOptions = options;
 
     if (updatedOptions == null) {
-      updatedOptions = Map.of();
+      updatedOptions = new HashMap<>();
     }
 
     updatedOptions.put("expand", List.of("latest_invoice.payment_intent"));
