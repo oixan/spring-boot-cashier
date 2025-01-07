@@ -42,6 +42,12 @@ public class AppConfigTest {
 }
 ```
 
+4. Add your Stripe API key to the properties file:
+
+```properties
+stripe.apiKey=your_stripe_api_key_here
+```
+
 ## Usage
 
 ### Checkout
