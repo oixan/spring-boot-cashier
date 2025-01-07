@@ -110,7 +110,14 @@ userStripe.subscription()
     .onTrial("default");
 ```
 
+### Grace Period
 
+To check if a subscription is in the grace period, you can use the following code:
+
+```java
+userStripe.subscription()
+  .onGracePeriod("default");
+```
 
 ### Ended Subscription
 
