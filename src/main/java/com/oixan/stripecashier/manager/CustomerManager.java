@@ -4,13 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.oixan.stripecashier.builder.StripeBuilder;
+import com.oixan.stripecashier.factory.UserServiceFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
+import com.oixan.stripecashier.service.UserService;
+import com.oixan.stripecashier.support.Classes;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 
 public class CustomerManager {
 
 	IUserStripe user;
+
+    Class<?> userClass;
+
+    Class<?> userId;
 	
 	StripeBuilder stripeBuilder;
 	
@@ -46,7 +53,7 @@ public class CustomerManager {
      * @throws StripeException if an error occurs while creating the customer
      * @return String!null the stripe id created
      */
-    public String createAsStripeCustomer(Map<String, Object> options){
+    public <T extends IUserStripe, ID> String createAsStripeCustomer(Map<String, Object> options){
         if (this.hasStripeId()) {
             return this.user.getStripeId();
         }
@@ -67,10 +74,6 @@ public class CustomerManager {
             options.put("phone", this.user.getPhone());
         }
 
-        if (!options.containsKey("address") && this.user.getAddress() != null) {
-            options.put("address", this.user.getAddress());
-        }
-
         if (!options.containsKey("preferred_locales") && this.user.getPreferredLocales() != null) {
             options.put("preferred_locales", this.user.getPreferredLocales());
         }
@@ -79,15 +82,16 @@ public class CustomerManager {
 		try {
 			customer = Customer.create(options);
 		} catch (StripeException e) {
-			return null;
+            throw new RuntimeException("Error creating Stripe customer", e);
 		}
 
         // Assign the Stripe customer ID to this object
         this.user.setStripeId(customer.getId());
 
         // Optionally save the customer ID in your database, depending on your application's needs
-        //this.save();
-        
+        UserService<T, ID> userService = UserServiceFactory.create((Class<T>)userClass, (Class<ID>)userId);
+        userService.updateStripeId(this.user, this.user.getStripeId());
+
         return this.user.getStripeId();
     }
 	
@@ -129,9 +133,16 @@ public class CustomerManager {
      *
      * @param user the IUserStripe instance to be set
      * @return the current instance of CustomerManager
+     * @throws NoSuchFieldException 
      */
-	public CustomerManager setUser(IUserStripe user) {
-		this.user = user;
+    public <T extends IUserStripe> CustomerManager setUser(T user) {
+		this.user =  user;
+        this.userClass = user.getClass();
+        try {
+            this.userId = Classes.findIdField(user.getClass()).getType();
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("Error accessing user ID field", e);
+        }
 		return this;
 	}
 }

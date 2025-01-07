@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,14 +20,18 @@ import org.springframework.test.context.TestPropertySource;
 import com.oixan.stripecashier.config.AppConfig;
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
+import com.oixan.stripecashier.factory.UserServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
-import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
+import com.oixan.stripecashier.service.UserService;
+import com.oixan.stripecashier.entity.UserAccount;
+
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.Subscription;
+
 
 @Configuration
 @ComponentScan(basePackages = "com.oixan.stripecashier.*")
@@ -37,84 +42,40 @@ public class SubscriptionBuilderTest {
   
 	 private CustomerManager customerManager;
 
-	 private IUserStripe userMock;
+	 private UserAccount userMock;
+
 	 
 	 @BeforeEach
 	 void setUp() {
-        userMock = new IUserStripe() {
-            private String stripeId;
+        userMock = new UserAccount();
+        userMock.setName("John Doe");
+        userMock.setEmail("john.doe@example.com");
+        userMock.setPhone("1234567890");
+        userMock.setPreferredLocales(null);
 
-            @Override
-            public String getStripeId() {
-                return stripeId;
-            }
-
-            @Override
-            public void setStripeId(String stripeId) {
-                this.stripeId = stripeId;
-            }
-
-            @Override
-            public String getName() {
-                return "John Doe";
-            }
-
-            @Override
-            public String getEmail() {
-                return "john.doe@example.com";
-            }
-
-            @Override
-            public String getPhone() {
-                return "1234567890";
-            }
-
-            @Override
-            public String getAddress() {
-                return null;
-            }
-
-            @Override
-            public String getPreferredLocales() {
-                return null;
-            }
-
-			@Override
-			public void setName(String name) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void setEmail(String email) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void setPhone(String phone) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void setAddress(String address) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void setPreferredLocales(String preferredLocales) {
-				// TODO Auto-generated method stub
-				
-			}
-        };
+        UserService<UserAccount, Long> userService = UserServiceFactory.create(UserAccount.class, Long.class);
+        userMock = userService.save(userMock);
 
         StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
 	 
+    @AfterEach
+    public void tearDown() {
+        // Pulizia delle risorse
+        System.out.println("Cleaning up after the test...");
+        
+        // Esegui una pulizia del database, ad esempio rimuovendo dati di test
+        try {
+            UserService<UserAccount, Long> userService = UserServiceFactory.create(UserAccount.class, Long.class);
+            userMock = userService.delete(userMock);
+
+            System.out.println("Database cleaned.");
+        } catch (Exception e) {
+            System.err.println("Error cleaning database: " + e.getMessage());
+        }
+    }
 	 
 	@Test
     void testCreateSubscriptionExistingCustomerAndDefaultPaymentMethod() throws StripeException {

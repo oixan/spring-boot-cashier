@@ -14,9 +14,11 @@ public interface IUserStripe
     String getPhone();
     void setPhone(String phone);
 
+    /*/
     String getAddress();
     void setAddress(String address);
-
+    */
+    
     String getPreferredLocales();
     void setPreferredLocales(String preferredLocales);
 }

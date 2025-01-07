@@ -108,17 +108,6 @@ class UserTest implements IUserStripe{
 		
 	}
 
-	@Override
-	public String getAddress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setAddress(String address) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public String getPreferredLocales() {
