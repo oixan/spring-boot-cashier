@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.config.StripeProperties;
+import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
@@ -31,7 +32,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
 	protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
+        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
@@ -48,7 +49,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(StripeProperties.instance()))
+    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
     	    .setCustomerManager(customerManager);
 
     	// Define a test payment method ID (e.g., a Visa card ID)

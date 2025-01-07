@@ -15,6 +15,7 @@ import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.entity.UserAccount;
+import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.oixan.stripecashier.factory.UserServiceFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.service.UserService;
@@ -28,7 +29,7 @@ public class CustomerManagerTest extends BaseTest {
 	protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
+        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }

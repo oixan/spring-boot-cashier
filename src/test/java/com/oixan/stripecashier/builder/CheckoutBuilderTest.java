@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.config.StripeProperties;
+import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
 
@@ -27,7 +28,7 @@ public class CheckoutBuilderTest extends BaseTest {
 	 protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
+        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
@@ -45,7 +46,7 @@ public class CheckoutBuilderTest extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(StripeProperties.instance()))
+    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
     	    .setCustomerManager(customerManager);
 
     	// Define a test payment method ID (e.g., a Visa card ID)
@@ -59,7 +60,7 @@ public class CheckoutBuilderTest extends BaseTest {
 
 
         // Step 4: Initialize CheckoutBuilder and create a checkout session
-        String checkoutUrl = new CheckoutBuilder(new StripeBuilder(StripeProperties.instance()))
+        String checkoutUrl = new CheckoutBuilder(new StripeBuilder(PropertiesFactory.create()))
                                     .setUser(userMock)
                                     .setPriceId("price_1QdxAQCtyihjMHctL68So9pU")
                                     .setQuantity(1)

@@ -21,7 +21,7 @@ import com.stripe.exception.StripeException;
 
 @Configuration
 @ComponentScan(basePackages = "com.oixan.stripecashier.*")
-@TestPropertySource(locations = "classpath:application.properties", properties = "spring.profiles.active=test")
+@TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest(classes = AppConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BaseTest {

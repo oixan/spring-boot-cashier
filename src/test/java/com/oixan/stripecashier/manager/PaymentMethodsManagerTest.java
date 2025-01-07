@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.config.StripeProperties;
-
+import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.PaymentMethodCollection;
@@ -28,12 +28,12 @@ public class PaymentMethodsManagerTest extends BaseTest {
 	 protected void setUp() throws StripeException {
 		super.setUp();
 
-		StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
+		StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
 		customerManager = new CustomerManager(stripeBuilder);
 		customerManager.setUser(userMock);
 		
 		paymentMethodsManager = new PaymentMethodsManager(
-									new StripeBuilder(StripeProperties.instance())
+									new StripeBuilder(PropertiesFactory.create())
 								)
 								.setCustomerManager(customerManager);
   }
@@ -103,7 +103,7 @@ public class PaymentMethodsManagerTest extends BaseTest {
     	assertNotNull(stripeCustomerId, "Stripe customer ID should not be null");
 
     	// Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(StripeProperties.instance()))
+    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
     	    .setCustomerManager(customerManager);
 
     	// Define a test payment method ID (e.g., a Visa card ID)
@@ -137,7 +137,7 @@ public class PaymentMethodsManagerTest extends BaseTest {
         assertNotNull(stripeCustomerId, "Stripe customer ID should not be null");
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-        PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(StripeProperties.instance()))
+        PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
             .setCustomerManager(customerManager);
 
         // Define a test payment method ID (e.g., a Visa card ID)
