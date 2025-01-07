@@ -110,6 +110,8 @@ userStripe.subscription()
     .onTrial("default");
 ```
 
+
+
 ### Ended Subscription
 
 To check if a subscription has ended, you can use the following code:
