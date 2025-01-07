@@ -1,36 +1,39 @@
-name: Deploy to Maven Central
+name: Release to Maven Central
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  deploy:
-    name: Deploy to Maven Central
+  release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adoptopenjdk'
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adoptopenjdk'
 
-    - name: Cache Maven dependencies
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      - name: Decrypt GPG private key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
+          gpg --batch --yes --decrypt --passphrase "${{ secrets.GPG_PASSPHRASE }}" --output private.key private.key
 
-    - name: Build with Maven
-      run: mvn clean install --settings .github/maven-settings.xml
+      - name: Import GPG key
+        run: |
+          gpg --import private.key
+          gpg --list-secret-keys --keyid-format LONG
 
-    - name: Publish to Maven Central
-      env:
-        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-      run: mvn deploy --settings .github/maven-settings.xml
+      - name: Build and deploy
+        run: |
+          mvn clean deploy -DskipTests -P release
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
