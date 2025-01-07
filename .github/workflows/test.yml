@@ -32,4 +32,4 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build and run tests (including integration tests)
-        run: mvn clean verify -Dstripe.apiKey=${{ secrets.STRIPE_API_KEY }} --settings .github/maven-settings.xml
+        run: mvn clean verify -Dsecrets.STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }} --settings .github/maven-settings.xml
