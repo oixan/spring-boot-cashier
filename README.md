@@ -5,17 +5,40 @@ Spring Boot Cashier provides an expressive, fluent interface to Stripe's subscri
 
 ## Documentation
 
-## Prerequisites
+## Installation
 
-The `UserEntity` class must implement the `IUserStripe` interface.
+To install Spring Boot Cashier, follow these steps:
 
-### Example
+1. Add the interface `IUserStripe` to your User entity:
 
 Here is an example of how to add the `IUserStripe` interface to the `UserEntity` class:
 
 ```java
 public class UserEntity implements IUserStripe {
   // Your implementation here
+}
+```
+
+2. Create a concrete repository class similar to this:
+
+```java
+@Repository
+public interface UserStripeConcreteRepository extends UserStripeRepository<UserEntity, Long> {
+}
+```
+
+where the first parameter `T` should be the concrete entity class and the second parameter the type of the ID.
+
+3. Initialize a bean to create `UserService` as follows:
+
+```java
+@Configuration
+public class AppConfigTest {
+
+  @Bean
+  public UserService<UserAccount, Long> userService(UserStripeConcreteRepository userStripeConcreteRepository) {
+    return new UserService<>(userStripeConcreteRepository);
+  }
 }
 ```
 
