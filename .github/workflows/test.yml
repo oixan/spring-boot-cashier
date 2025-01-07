@@ -33,8 +33,7 @@ jobs:
 
       - name: Set up environment variables (optional)
         run: |
-          echo "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" >> $GITHUB_ENV
-        if: ${{ secrets.STRIPE_API_KEY != '' }}
+          if [ -n "${{ secrets.STRIPE_API_KEY }}" ]; then echo "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" >> $GITHUB_ENV; fi
 
       - name: Build and run tests (including integration tests)
         run: mvn clean verify --settings .github/maven-settings.xml
