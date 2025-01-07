@@ -42,6 +42,8 @@ public class AppConfigTest {
 }
 ```
 
+## Usage
+
 ### Checkout
 
 To handle the checkout process, you can use the following code:
