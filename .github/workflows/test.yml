@@ -31,16 +31,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Decode secrets.properties file
-        env:
-          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
-        run: echo "$STRIPE_API_KEY" | base64 -d > ./secrets.properties
-
-      - name: Set up environment variables (optional)
-        run: |
-          # Assuming the decoded secrets.properties has the STRIPE_API_KEY variable
-          export STRIPE_API_KEY=$(grep 'stripe.apiKey' ./secrets.properties | cut -d'=' -f2)
-          echo "STRIPE_API_KEY=$STRIPE_API_KEY" >> $GITHUB_ENV
+      - name: Set STRIPE_API_KEY environment variable
+        run: echo "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" >> $GITHUB_ENV
 
       - name: Build and run tests (including integration tests)
         run: mvn clean verify -Dstripe.apiKey=${{ env.STRIPE_API_KEY }} --settings .github/maven-settings.xml
