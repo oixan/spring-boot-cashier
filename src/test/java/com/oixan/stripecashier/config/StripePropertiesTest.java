@@ -1,18 +1,12 @@
 package com.oixan.stripecashier.config;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.TestPropertySource;
 
+import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
 
-@Configuration
-@ComponentScan(basePackages = "com.oixan.stripecashier.config")
-@SpringBootTest(classes = StripePropertiesTest.class)
-@TestPropertySource(locations = "classpath:application.properties")
-public class StripePropertiesTest {
+
+public class StripePropertiesTest extends BaseTest {
 
     @Test
     void testStripeApiKey() {

@@ -7,66 +7,32 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 
-import com.oixan.stripecashier.config.AppConfig;
+import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.config.StripeProperties;
-import com.oixan.stripecashier.entity.UserAccount;
-import com.oixan.stripecashier.factory.UserServiceFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
-import com.oixan.stripecashier.service.UserService;
+
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 
 
-@Configuration
-@ComponentScan(basePackages = "com.oixan.stripecashier.*")
-@TestPropertySource(locations = "classpath:application.properties", properties = "spring.profiles.active=test")
-@SpringBootTest(classes = AppConfig.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CheckoutBuilderTest {
+public class CheckoutBuilderTest extends BaseTest {
   
 	 private CustomerManager customerManager;
 
-	 private UserAccount userMock;
-
-	
 	 @BeforeEach
-	 void setUp() {
-        userMock = new UserAccount();
-        userMock.setName("John Doe");
-        userMock.setEmail("john.doe@example.com");
-        userMock.setPhone("1234567890");
-        userMock.setPreferredLocales(null);
-        
-        UserService<UserAccount, Long> userService = UserServiceFactory.create(UserAccount.class, Long.class);
-        userMock = userService.save(userMock);
+	 protected void setUp() throws StripeException {
+        super.setUp();
 
         StripeBuilder stripeBuilder = new StripeBuilder(StripeProperties.instance());
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
 
-    @AfterEach
-    public void tearDown() {
-        // Pulizia delle risorse
-        System.out.println("Cleaning up after the test...");
-        
-        // Esegui una pulizia del database, ad esempio rimuovendo dati di test
-        UserService<UserAccount, Long> userService = UserServiceFactory.create(UserAccount.class, Long.class);
-        userMock = userService.delete(userMock);        
-        
-        System.out.println("Database cleaned.");
-    }
-	 
+	
 	@Test
     void testCreateAsStripeCustomer() throws StripeException {
         // Step 1: Initialize PaymentMethodsManager and add a payment method
@@ -74,8 +40,8 @@ public class CheckoutBuilderTest {
         options.put("description", "Test customer chekcout");
         options.put("email", "checkout@live.it");
         String stripeId = customerManager
-                                .setUser(userMock)
-                                .createAsStripeCustomer(options);
+                            .createAsStripeCustomer(options);
+                            
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
