@@ -6,6 +6,22 @@
     <packaging>war</packaging>
     <name>Spring boot cashier</name>
     <description>A Spring Boot starter for subscription management with Stripe</description>
+
+    <url>https://github.com/oixan/spring-boot-cashier</url>
+    
+    <scm>
+        <url>https://github.com/oixan/spring-boot-cashier</url>
+        <connection>scm:git:git://github.com/oixan/spring-boot-cashier.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:oixan/spring-boot-cashier.git</developerConnection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     
     <parent>
         <groupId>org.springframework.boot</groupId>
