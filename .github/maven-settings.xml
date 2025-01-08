@@ -9,6 +9,7 @@
     <id>central</id>
     <username>${sonatype.username}</username>
     <password>${sonatype.password}</password>
+    <passphrase>${gpg.passphrase}</passphrase>
   </server>
 </servers>
 
