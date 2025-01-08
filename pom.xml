@@ -121,9 +121,15 @@
                     </goals>
                     <configuration>
                         <files>
-                        ${project.build.directory}/${project.artifactId}-${project.version}.pom
-                        ${project.build.directory}/${project.artifactId}-${project.version}.war
+                            ${project.build.directory}/${project.artifactId}-${project.version}.pom
+                            ${project.build.directory}/${project.artifactId}-${project.version}.war
                         </files>
+                        <gpgArguments>
+                            <arg>--pinentry-mode</arg>
+                            <arg>loopback</arg>
+                            <arg>--passphrase</arg>
+                            <arg>${gpg.passphrase}</arg>
+                        </gpgArguments>
                     </configuration>
                     </execution>
                 </executions>

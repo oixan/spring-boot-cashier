@@ -36,7 +36,8 @@ jobs:
         run: |
           mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml \
           -Dsonatype.username=${{ secrets.SONATYPE_TOKEN_USERNAME }} \
-          -Dsonatype.password=${{ secrets.SONATYPE_TOKEN_PASSWORD }}
+          -Dsonatype.password=${{ secrets.SONATYPE_TOKEN_PASSWORD }} \
+          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
