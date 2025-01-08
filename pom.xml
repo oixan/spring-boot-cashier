@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.oixan</groupId>
     <artifactId>spring-boot-cashier</artifactId>
-    <version>0.0.1</version>
-    <packaging>war</packaging>
+    <version>0.0.2</version>
+    <packaging>jar</packaging>
     <name>Spring Boot Cashier</name>
     <description>A Spring Boot starter for subscription management with Stripe</description>
 
