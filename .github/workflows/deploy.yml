@@ -17,13 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Decrypt GPG private key
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
-          gpg --batch --yes --decrypt --passphrase "${{ secrets.GPG_PASSPHRASE }}" --output private.key private.key
-
       - name: Import GPG key
         run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
           gpg --import private.key
           gpg --list-secret-keys --keyid-format LONG
 
