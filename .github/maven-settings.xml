@@ -6,9 +6,9 @@
   <!-- Configurazione dei server di deployment -->
   <servers>
     <server>
-      <id>ossrh</id>
-      <username>${SONATYPE_USERNAME}</username>
-      <password>${SONATYPE_PASSWORD}</password>
+      <id>${server}</id>
+      <username>${SONATYPE_TOKEN_USERNAME}</username>
+      <password>${SONATYPE_TOKEN_PASSWORD}</password>
     </server>
   </servers>
 
