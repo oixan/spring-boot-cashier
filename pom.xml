@@ -115,18 +115,8 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <configuration>
-                            <files>
-                                ${project.build.directory}/${project.artifactId}-${project.version}.pom
-                                ${project.build.directory}/${project.artifactId}-${project.version}.war
-                            </files>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                                <arg>--passphrase</arg>
-                                <arg>${gpg.passphrase}</arg>
-                            </gpgArguments>
-                        </configuration>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>

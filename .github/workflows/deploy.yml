@@ -32,6 +32,11 @@ jobs:
           gpg --batch --yes --pinentry-mode loopback --import private.key
           gpg --list-secret-keys --keyid-format LONG
 
+      - name: Verify GPG key
+        run: |
+          gpg --list-secret-keys --keyid-format LONG
+          gpg --fingerprint
+
       - name: Build and deploy
         run: |
           mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml \
@@ -41,4 +46,3 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
