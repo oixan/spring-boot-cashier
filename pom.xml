@@ -114,4 +114,27 @@
 	    
 	</build>
 
+	<profiles>
+	
+	  <profile>
+	    <id>release</id>
+	    
+	    <build>
+	   
+	      <plugins>
+	      
+	        <plugin>
+	          <groupId>org.sonatype.ossindex</groupId>
+	          <artifactId>ossindex-maven-plugin</artifactId>
+	          <version>1.2.0</version>
+	        </plugin>
+	        
+	      </plugins>
+	      
+	    </build>
+	    
+	  </profile>
+	  
+	</profiles>
+	
 </project>

@@ -12,37 +12,4 @@
     </server>
   </servers>
 
-  <!-- Configurazione dei mirror per Maven Central (opzionale) -->
-  <mirrors>
-    <mirror>
-      <id>central</id>
-      <mirrorOf>central</mirrorOf>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <blocked>false</blocked>
-    </mirror>
-  </mirrors>
-
-
-
-  <!-- Configurazione di profili di build (opzionale) -->
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
-
-  <!-- Abilitazione per l'esecuzione di profile specifici -->
-  <activeProfiles>
-    <activeProfile>default</activeProfile>
-  </activeProfiles>
-
 </settings>
