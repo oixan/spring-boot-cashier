@@ -34,8 +34,6 @@ jobs:
 
       - name: Build and deploy
         run: |
-          echo "SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN_USERNAME }}"  # Log per verificare il nome utente Sonatype
-          echo "SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}"  # Log per verificare la password Sonatype
           mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
