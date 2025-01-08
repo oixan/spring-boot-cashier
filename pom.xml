@@ -109,6 +109,25 @@
                     <publishingServerId>central</publishingServerId>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                    <goals>
+                        <goal>sign</goal>
+                    </goals>
+                    <configuration>
+                        <files>
+                        ${project.build.directory}/${project.artifactId}-${project.version}.pom
+                        ${project.build.directory}/${project.artifactId}-${project.version}.war
+                        </files>
+                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 	        
 	    </plugins>
 	    
