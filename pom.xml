@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>3.2.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -117,12 +117,12 @@
                         </goals>
                         <id>sign-artifacts</id>
                         <phase>verify</phase>
-                         <configuration>
+                        <configuration>
+                            <gpgKey>${gpg.private_key_id}</gpgKey>
+                            <gpgPassphrase>${gpg.passphrase}</gpgPassphrase>
                             <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                                <arg>--passphrase</arg>
-                                <arg>${env.GPG_PASSPHRASE}</arg>
+                                <gpgArgument>--pinentry-mode</gpgArgument>
+                                <gpgArgument>loopback</gpgArgument>
                             </gpgArguments>
                         </configuration>
                     </execution>

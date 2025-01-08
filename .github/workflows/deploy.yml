@@ -31,6 +31,14 @@ jobs:
           echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
           gpg --batch --yes --pinentry-mode loopback --import private.key
           gpg --list-secret-keys --keyid-format LONG
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Get GPG private key ID
+        id: gpg_key_id
+        run: |
+          GPG_PRIVATE_KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk '{print $2}' | cut -d'/' -f2)
+          echo "GPG_PRIVATE_KEY_ID=$GPG_PRIVATE_KEY_ID" >> $GITHUB_ENV
 
       - name: Verify GPG key
         run: |
@@ -42,7 +50,8 @@ jobs:
           mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml \
           -Dsonatype.username=${{ secrets.SONATYPE_TOKEN_USERNAME }} \
           -Dsonatype.password=${{ secrets.SONATYPE_TOKEN_PASSWORD }} \
-          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+          -Dgpg.private_key_id=${{ env.GPG_PRIVATE_KEY_ID }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

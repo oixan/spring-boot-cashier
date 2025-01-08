@@ -16,4 +16,18 @@
     </server>
   </servers>
 
+  <profiles>
+  	<profile>
+        <id>gpg</id>
+        <properties>
+            <gpg.keyname>${gpg.private_key_id}</gpg.keyname>
+            <gpg.passphrase>${gpg.passphrase}</gpg.passphrase>
+        </properties>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+	 <activeProfile>gpg</activeProfile>
+  </activeProfiles>
+
 </settings>
