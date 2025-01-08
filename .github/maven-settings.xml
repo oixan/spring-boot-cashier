@@ -4,13 +4,16 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
   <!-- Configurazione dei server di deployment -->
-<servers>
-  <server>
-    <id>central</id>
-    <username>${sonatype.username}</username>
-    <password>${sonatype.password}</password>
-    <passphrase>${gpg.passphrase}</passphrase>
-  </server>
-</servers>
+  <servers>
+    <server>
+      <id>central</id>
+      <username>${sonatype.username}</username>
+      <password>${sonatype.password}</password>
+    </server>
+    <server>
+      <id>gpg.passphrase</id>
+      <passphrase>${gpg.passphrase}</passphrase>
+    </server>
+  </servers>
 
 </settings>
