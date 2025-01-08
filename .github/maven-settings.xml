@@ -6,7 +6,7 @@
   <!-- Configurazione dei server di deployment -->
   <servers>
     <server>
-      <id>${server}</id>
+      <id>central</id>
       <username>${SONATYPE_TOKEN_USERNAME}</username>
       <password>${SONATYPE_TOKEN_PASSWORD}</password>
     </server>
