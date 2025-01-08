@@ -1,9 +1,7 @@
 name: Release to Maven Central
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch: # Permette l'esecuzione manuale
 
 jobs:
   release:
