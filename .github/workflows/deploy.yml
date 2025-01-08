@@ -17,10 +17,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Prepare GPG environment
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+        env:
+          GPG_TTY: $(tty)
+
       - name: Import GPG key
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
-          gpg --import private.key
+          gpg --batch --yes --pinentry-mode loopback --import private.key
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Build and deploy
