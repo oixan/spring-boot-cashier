@@ -32,20 +32,12 @@ jobs:
           gpg --batch --yes --pinentry-mode loopback --import private.key
           gpg --list-secret-keys --keyid-format LONG
 
-      - name: Check Maven settings
-        run: |
-          cat .github/maven-settings.xml
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
-
       - name: Build and deploy
         run: |
-          mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml
+          mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml \
+          -Dsonatype.username=${{ secrets.SONATYPE_TOKEN_USERNAME }} \
+          -Dsonatype.password=${{ secrets.SONATYPE_TOKEN_PASSWORD }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
+
