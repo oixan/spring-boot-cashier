@@ -32,6 +32,10 @@ jobs:
           gpg --batch --yes --pinentry-mode loopback --import private.key
           gpg --list-secret-keys --keyid-format LONG
 
+      - name: Check Maven settings
+        run: |
+          cat .github/maven-settings.xml
+
       - name: Build and deploy
         run: |
           mvn clean deploy -DskipTests -P release --settings .github/maven-settings.xml
