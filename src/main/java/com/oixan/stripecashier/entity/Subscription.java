@@ -28,7 +28,7 @@ import jakarta.persistence.Table;
 public class Subscription {
 
     /**
-     *  
+     * Constructs a new instance.
      */
     public Subscription() {
         // Default constructor

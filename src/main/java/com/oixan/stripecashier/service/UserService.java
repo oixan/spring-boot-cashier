@@ -9,6 +9,9 @@ import com.oixan.stripecashier.support.Classes;
 
 /**
  * A service class for managing user-related operations.
+ *
+ * @param <T> the type of user entity extending
+ * @param <D> the type of the user ID
  */
 public class UserService<T extends IUserStripe, D> {
 
@@ -51,7 +54,7 @@ public class UserService<T extends IUserStripe, D> {
      * dynamically using reflection.</p>
      *
      * @param model the user model whose ID is to be used to find the user
-     * @return an containing the user if found, otherwise an empty
+     * @return an Optional containing the user if found, otherwise an empty Optional
      * @throws RuntimeException if there is an error accessing the user ID field
      */
     public Optional<T> getUserById(IUserStripe model){
