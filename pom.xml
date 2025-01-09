@@ -119,12 +119,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <gpgArguments>
-                                <gpgArgument>--pinentry-mode</gpgArgument>
-                                <gpgArgument>loopback</gpgArgument>
-                                 <includeJavadoc>true</includeJavadoc>
-            					<includeSources>true</includeSources>
-            					<gpgKey>${gpg.private_key_id}</gpgKey>
-                            	<gpgPassphrase>${gpg.passphrase}</gpgPassphrase>
+
                             </gpgArguments>
                         </configuration>
                     </execution>
