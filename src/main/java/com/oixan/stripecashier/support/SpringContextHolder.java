@@ -1,37 +1,28 @@
 package com.oixan.stripecashier.support;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 @Component
-public class SpringContextHolder implements ApplicationContextAware, ApplicationListener<ApplicationContextEvent> {
+public class SpringContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext context;
-    private static final CountDownLatch latch = new CountDownLatch(1);
+    private static final CompletableFuture<Void> contextInitialized = new CompletableFuture<>();
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         context = applicationContext;
-        latch.countDown();
-        System.out.println("ApplicationContext is set on setApplicationContext method");
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationContextEvent event) {
-        context = event.getApplicationContext();
-        latch.countDown();
-        System.out.println("ApplicationContext is set on onApplicationEvent method");
+        contextInitialized.complete(null);  // Il contesto è stato inizializzato
     }
 
     public static <T> T getBean(Class<T> requiredType) {
         try {
-            latch.await();
-        } catch (InterruptedException e) {
+            contextInitialized.get();
+        } catch (InterruptedException | ExecutionException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Thread interrupted while waiting for ApplicationContext initialization", e);
         }
