@@ -2,6 +2,7 @@ package com.oixan.stripecashier.factory;
 
 import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.singleton.ApplicationContextSingleton;
+import com.oixan.stripecashier.support.SpringContextHolder;
 
 /**
  * The {@code PropertiesFactory} class is responsible for creating and managing the {@link StripeProperties} instance.
@@ -37,9 +38,7 @@ public class PropertiesFactory {
         }
 
         // Create the properties instance using the application context
-        properties = ApplicationContextSingleton
-                                            .create()
-                                            .getBean(StripeProperties.class);
+        properties = SpringContextHolder.getBean(StripeProperties.class);
 
         return properties;
     }
