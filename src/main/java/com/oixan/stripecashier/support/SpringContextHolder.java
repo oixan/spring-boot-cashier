@@ -1,13 +1,15 @@
 package com.oixan.stripecashier.support;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
-
 import java.util.concurrent.CountDownLatch;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ApplicationContextEvent;
+import org.springframework.stereotype.Component;
+
 @Component
-public class SpringContextHolder implements ApplicationContextAware {
+public class SpringContextHolder implements ApplicationContextAware, ApplicationListener<ApplicationContextEvent> {
 
     private static ApplicationContext context;
     private static final CountDownLatch latch = new CountDownLatch(1);
@@ -16,6 +18,14 @@ public class SpringContextHolder implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) {
         context = applicationContext;
         latch.countDown();
+        System.out.println("ApplicationContext is set on setApplicationContext method");
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationContextEvent event) {
+        context = event.getApplicationContext();
+        latch.countDown();
+        System.out.println("ApplicationContext is set on onApplicationEvent method");
     }
 
     public static <T> T getBean(Class<T> requiredType) {
