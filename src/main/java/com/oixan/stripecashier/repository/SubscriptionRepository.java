@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * The interface provides methods to interact with the subscription data.
+ */
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 

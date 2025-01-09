@@ -16,253 +16,227 @@ import com.stripe.model.Subscription;
 import com.stripe.param.SubscriptionCreateParams.Item;
 import com.stripe.param.SubscriptionCreateParams;
 
+/**
+ * The {@code SubscriptionBuilder} class provides functionality to create and manage subscriptions on Stripe.
+ * It supports setting custom trial periods, associating customers, handling payment methods, and defining subscription options.
+ */
 public class SubscriptionBuilder {
 
-    /*
-     * The customer manager.
+    /**
+     * Manages Stripe customers.
      */
     private final CustomerManager customerManager;
 
-
-    /*
-     * The payment methods manager.
+    /**
+     * Manages Stripe payment methods.
      */
     private final PaymentMethodsManager paymentMethodsManager;
 
-
-    /*
-     * The price ID for the subscription.
+    /**
+     * The price ID for the subscription product.
      */
     private String priceId;
-
 
     /**
      * The trial end date for the subscription.
      */
     private Instant trialExpires;
 
-    
     /**
-     * Creates a new instance of the SubscriptionBuilder.
+     * Constructs a new {@code SubscriptionBuilder} instance with the specified managers.
      *
-     * @param customerManager The customer manager
-     * @param paymentMethodsManager The payment methods manager
+     * @param customerManager the manager for handling Stripe customers
+     * @param paymentMethodsManager the manager for handling Stripe payment methods
      */
-    public SubscriptionBuilder(
-      CustomerManager customerManager,
-      PaymentMethodsManager paymentMethodsManager
-    ) {
-      this.customerManager = customerManager;
-      this.paymentMethodsManager = paymentMethodsManager;
+    public SubscriptionBuilder(CustomerManager customerManager, PaymentMethodsManager paymentMethodsManager) {
+        this.customerManager = customerManager;
+        this.paymentMethodsManager = paymentMethodsManager;
     }
 
-
     /**
-     * Sets the trial end date for the subscription.
+     * Sets the price ID for the subscription.
      *
-     * @param trialExpires The trial end date
-     * @return The current instance of the SubscriptionBuilder
+     * @param priceId the price ID of the product
+     * @return the current instance of {@code SubscriptionBuilder} for method chaining
      */
     public SubscriptionBuilder setPriceId(String priceId) {
         this.priceId = priceId;
         return this;
     }
 
-
     /**
-     * Sets the trial end date for the subscription.
-     * 
-     * @param days
-     * @return The current instance of the SubscriptionBuilder
+     * Sets the trial period for the subscription in days.
+     *
+     * @param days the number of trial days
+     * @return the current instance of {@code SubscriptionBuilder} for method chaining
+     * @throws IllegalArgumentException if the number of days is less than 1
      */
     public SubscriptionBuilder setTrialDay(int days) {
-      if (days < 1) {
-          throw new IllegalArgumentException("Trial days must be greater than 0.");
-      }
-
-      this.trialExpires = Instant.now().plusSeconds(days * 24 * 60 * 60);
-      return this;
+        if (days < 1) {
+            throw new IllegalArgumentException("Trial days must be greater than 0.");
+        }
+        this.trialExpires = Instant.now().plusSeconds(days * 24L * 60 * 60);
+        return this;
     }
-
 
     /**
      * Sets the trial end date for the subscription.
-     * 
-     * @param trialExpires
-     * @return The current instance of the SubscriptionBuilder
+     *
+     * @param trialExpires the trial expiration date
+     * @return the current instance of {@code SubscriptionBuilder} for method chaining
+     * @throws IllegalArgumentException if the provided date is in the past
      */
     public SubscriptionBuilder setTrialExpireDate(Instant trialExpires) {
         if (trialExpires.isBefore(Instant.now())) {
             throw new IllegalArgumentException("Trial expiration date must be in the future.");
         }
-
         this.trialExpires = trialExpires;
         return this;
     }
 
-
     /**
-     * Creates a subscription to an existing product on Stripe.
+     * Creates a subscription for a customer on Stripe, associating a payment method and customer details.
      *
-     * @param customerOptions    The customer options for the subscription
-     * @param subscriptionOptions The options for the subscription, including product and price
-     * @param paymentMethod      The payment method (optional)
-     * @return The created subscription
-     * @throws StripeException If an error occurs during creation
+     * @param customerOptions the options for creating or retrieving the Stripe customer
+     * @param subscriptionOptions the options for the subscription
+     * @param paymentMethod the payment method to use
+     * @param type the type of subscription
+     * @return the created {@code Subscription}
+     * @throws StripeException if an error occurs during subscription creation
      */
     public Subscription startAndCreateStripeUserAndPaymentMethod(
-      Map<String, Object> customerOptions, 
-      Map<String, Object> subscriptionOptions, 
-      String paymentMethod,
-      String type
+            Map<String, Object> customerOptions,
+            Map<String, Object> subscriptionOptions,
+            String paymentMethod,
+            String type
     ) throws StripeException {
-      customerManager.createOrGetStripeCustomer(customerOptions);
+        customerManager.createOrGetStripeCustomer(customerOptions);
 
-      if (paymentMethod == null || paymentMethod.isEmpty()) {
-        throw new IllegalArgumentException("Payment method is required.");
-      }
+        if (paymentMethod == null || paymentMethod.isEmpty()) {
+            throw new IllegalArgumentException("Payment method is required.");
+        }
 
-      PaymentMethod pm = paymentMethodsManager.addPaymentMethod(paymentMethod);
+        PaymentMethod pm = paymentMethodsManager.addPaymentMethod(paymentMethod);
 
-      return start(subscriptionOptions, pm.getId(), type);
+        return start(subscriptionOptions, pm.getId(), type);
     }
 
-
     /**
-     * Creates a subscription to an existing product on Stripe.
+     * Creates a basic subscription without specifying additional options or payment methods.
      *
-     * @return The created subscription
-     * @throws StripeException If an error occurs during creation
+     * @return the created {@code Subscription}
+     * @throws StripeException if an error occurs during subscription creation
      */
-    public Subscription start() throws StripeException { 
-      return start(null, null, null);
+    public Subscription start() throws StripeException {
+        return start(null, null, null);
     }
-  
 
     /**
-     * Creates a subscription to an existing product on Stripe.
+     * Creates a subscription with specified options, payment method, and type.
      *
-     * @param paymentMethod      The payment method (optional)
-     * @param customerOptions    The customer options for the subscription
-     * @param subscriptionOptions The options for the subscription, including product and price
-     * @return The created subscription
-     * @throws StripeException If an error occurs during creation
+     * @param subscriptionOptions the subscription options
+     * @param paymentMethod the payment method ID
+     * @param type the type of subscription
+     * @return the created {@code Subscription}
+     * @throws StripeException if an error occurs during subscription creation
      */
     public Subscription start(
-      Map<String, Object> subscriptionOptions, 
-      String paymentMethod,
-      String type
+            Map<String, Object> subscriptionOptions,
+            String paymentMethod,
+            String type
     ) throws StripeException {
-      Customer stripeCustomer = customerManager.asStripeCustomer();
+        Customer stripeCustomer = customerManager.asStripeCustomer();
 
-      if (stripeCustomer == null) {
-          throw new IllegalArgumentException("Customer is required.");
-      }
+        if (stripeCustomer == null) {
+            throw new IllegalArgumentException("Customer is required.");
+        }
 
-      if (type == null || type.isEmpty()) {
-          type = "default";
-      }
+        if (type == null || type.isEmpty()) {
+            type = "default";
+        }
 
-      if (priceId == null) {
-          throw new IllegalArgumentException("Price ID is required.");
-      }
+        if (priceId == null) {
+            throw new IllegalArgumentException("Price ID is required.");
+        }
 
-      if (subscriptionOptions == null || subscriptionOptions.isEmpty()) {
-        subscriptionOptions = new HashMap<>();
-      }
+        if (subscriptionOptions == null) {
+            subscriptionOptions = new HashMap<>();
+        }
 
-      String paymentMethodId = paymentMethod;
-      if (paymentMethod == null || paymentMethod.isEmpty()) {
-          paymentMethodId = paymentMethodsManager.defaultPaymentMethod().getId();
-          if (paymentMethodId == null) {
-              throw new IllegalArgumentException("Payment method is required.");
-          }
-      }
+        String paymentMethodId = paymentMethod != null && !paymentMethod.isEmpty()
+                ? paymentMethod
+                : paymentMethodsManager.defaultPaymentMethod().getId();
 
-      Item item = SubscriptionCreateParams.Item.builder()
-              .setPrice(priceId)  
-              .setQuantity(1L)
-              .build();
+        if (paymentMethodId == null) {
+            throw new IllegalArgumentException("Payment method is required.");
+        }
 
-      Map<String, Object> updatedSubscriptionOptions = addAdditionalOptions(subscriptionOptions);
+        Item item = SubscriptionCreateParams.Item.builder()
+                .setPrice(priceId)
+                .setQuantity(1L)
+                .build();
 
-      SubscriptionCreateParams params = SubscriptionCreateParams.builder()
-          .setCustomer(stripeCustomer.getId())
-          .setDefaultPaymentMethod(paymentMethodId) 
-          .addItem(item)  
-          .putAllMetadata(updatedSubscriptionOptions.entrySet().stream()
-              .collect(Collectors.toMap(
-              Map.Entry::getKey,
-              e -> String.valueOf(e.getValue())
-              )))
-          .build();
+        Map<String, Object> updatedSubscriptionOptions = addAdditionalOptions(subscriptionOptions);
 
-      try {
+        SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+                .setCustomer(stripeCustomer.getId())
+                .setDefaultPaymentMethod(paymentMethodId)
+                .addItem(item)
+                .putAllMetadata(updatedSubscriptionOptions.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> String.valueOf(e.getValue())
+                        )))
+                .build();
+
         Subscription stripeSubscription = Subscription.create(params);
 
         saveSubscription(stripeSubscription, type);
-                
+
         return stripeSubscription;
-      } catch (Exception e) {
-          throw new RuntimeException("Failed to create subscription on Stripe", e);
-      }
-  }
-    
-
-  /**
-  * Adds additional options to the subscription.
-  * 
-  * @param options The options to be added
-  * @return The updated options
-  */
-  private Map<String, Object> addAdditionalOptions(Map<String, Object> options) {
-    Map<String, Object> updatedOptions = options;
-
-    if (updatedOptions == null) {
-      updatedOptions = new HashMap<>();
     }
 
-    updatedOptions.put("expand", List.of("latest_invoice.payment_intent"));
-    updatedOptions.put("promotion_code", null);
-    updatedOptions.put("trial_end", this.getTrialEndForSubscription());
-    
-    return updatedOptions;
-  }
-
-
-  /**
-   * Gets the trial end date for the subscription.
-   * 
-   * @return The trial end date
-   */
-  private String getTrialEndForSubscription() {
-    if (this.trialExpires != null) {
-          return String.valueOf(this.trialExpires.getEpochSecond());
+    /**
+     * Adds additional metadata and options for the subscription.
+     *
+     * @param options the existing subscription options
+     * @return the updated options map
+     */
+    private Map<String, Object> addAdditionalOptions(Map<String, Object> options) {
+        Map<String, Object> updatedOptions = options != null ? options : new HashMap<>();
+        updatedOptions.put("expand", List.of("latest_invoice.payment_intent"));
+        updatedOptions.put("promotion_code", null);
+        updatedOptions.put("trial_end", this.getTrialEndForSubscription());
+        return updatedOptions;
     }
-    return null;
-  }
 
+    /**
+     * Retrieves the trial end date as a string in epoch seconds.
+     *
+     * @return the trial end date as a string, or {@code null} if no trial is set
+     */
+    private String getTrialEndForSubscription() {
+        return this.trialExpires != null ? String.valueOf(this.trialExpires.getEpochSecond()) : null;
+    }
 
-  /**
-   * Saves the subscription to the database.
-   * 
-   * @param stripeSubscription The Stripe subscription
-   * @param type The type of subscription
-   */
-  private void saveSubscription(Subscription stripeSubscription, String type) {
-    com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
+    /**
+     * Saves the subscription to the database.
+     *
+     * @param stripeSubscription the Stripe subscription object
+     * @param type the type of the subscription
+     */
+    private void saveSubscription(Subscription stripeSubscription, String type) {
+        com.oixan.stripecashier.entity.Subscription subscription = new com.oixan.stripecashier.entity.Subscription();
 
-    subscription.setUserId(customerManager.stripeId());
-    subscription.setType(type);
-    subscription.setStripeId(stripeSubscription.getId());
-    subscription.setStripeStatus(stripeSubscription.getStatus());
-    subscription.setStripePrice(stripeSubscription.getItems().getData().get(0).getPrice().getId());
-    subscription.setQuantity(stripeSubscription.getItems().getData().get(0).getQuantity());
-    subscription.setTrialEndsAt(null);
-    subscription.setEndsAt(null);
+        subscription.setUserId(customerManager.stripeId());
+        subscription.setType(type);
+        subscription.setStripeId(stripeSubscription.getId());
+        subscription.setStripeStatus(stripeSubscription.getStatus());
+        subscription.setStripePrice(stripeSubscription.getItems().getData().get(0).getPrice().getId());
+        subscription.setQuantity(stripeSubscription.getItems().getData().get(0).getQuantity());
+        subscription.setTrialEndsAt(null);
+        subscription.setEndsAt(null);
 
-    SubscriptionServiceFactory.create()
-                        .createSubscription(subscription);
-  }
-
+        SubscriptionServiceFactory.create().createSubscription(subscription);
+    }
 }

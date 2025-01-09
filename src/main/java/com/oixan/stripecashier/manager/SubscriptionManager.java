@@ -11,12 +11,26 @@ import com.oixan.stripecashier.service.SubscriptionService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 
+/**
+ * Manages subscription-related operations.
+ */
 public class SubscriptionManager {
 
+    /**
+     * Represents the user associated with Stripe operations.
+     */
     private IUserStripe user;
 
+    /**
+     * Service for managing subscriptions.
+     */
     private SubscriptionService subscriptionService;
 
+    /**
+     * Manages subscription-related operations.
+     * This class is responsible for handling the creation and management of subscriptions
+     * using the SubscriptionService.
+     */
     public SubscriptionManager() {
         this.subscriptionService = SubscriptionServiceFactory.create();
     }

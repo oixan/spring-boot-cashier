@@ -118,13 +118,39 @@
                         <id>sign-artifacts</id>
                         <phase>verify</phase>
                         <configuration>
-                            <gpgKey>${gpg.private_key_id}</gpgKey>
-                            <gpgPassphrase>${gpg.passphrase}</gpgPassphrase>
                             <gpgArguments>
                                 <gpgArgument>--pinentry-mode</gpgArgument>
                                 <gpgArgument>loopback</gpgArgument>
+                                 <includeJavadoc>true</includeJavadoc>
+            					<includeSources>true</includeSources>
+            					<gpgKey>${gpg.private_key_id}</gpgKey>
+                            	<gpgPassphrase>${gpg.passphrase}</gpgPassphrase>
                             </gpgArguments>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -13,111 +13,129 @@ import com.oixan.stripecashier.service.SubscriptionService;
 
 import com.stripe.exception.StripeException;
 
+/**
+ * Service class that demonstrates various Stripe-related actions.
+ * This includes creating a Stripe customer, adding a payment method,
+ * initiating a checkout, subscribing to a plan, and managing subscriptions.
+ */
 @Service
 public class Test {
 
-	public void test() throws StripeException {
-		UserTest user = new UserTest();
-		IUserStripeAction userStripe = UserStripeFactory.create(user);
+		/**
+		 * Private constructor to prevent instantiation.
+		 */
+		private Test() {
+		}
 
-		userStripe.customer()
-						.createAsStripeCustomer(null);
+    /**
+     * Runs a series of actions involving Stripe services such as creating a customer,
+     * adding a payment method, completing checkout, subscribing to a plan, and managing subscriptions.
+     * 
+     * @throws StripeException If any error occurs while interacting with the Stripe API.
+     */
+    public void test() throws StripeException {
+        UserTest user = new UserTest();
+        IUserStripeAction userStripe = UserStripeFactory.create(user);
 
-		userStripe.paymentMethod()
-						.addPaymentMethod("id");				
+        // Create a Stripe customer
+        userStripe.customer()
+                   .createAsStripeCustomer(null);
 
-		userStripe.checkout()
-						.setPriceId("idprice")
-						.setQuantity(1)
-						.complete();
+        // Add a payment method to the user's Stripe account
+        userStripe.paymentMethod()
+                   .addPaymentMethod("id");
 
-		userStripe.subscribe()
-						.setPriceId("idprice")
-						//.setTrialDay(30)
-						.start();
-		
+        // Complete the checkout process
+        userStripe.checkout()
+                   .setPriceId("idprice")
+                   .setQuantity(1)
+                   .complete();
 
-		SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+        // Start a subscription for the user
+        userStripe.subscribe()
+                   .setPriceId("idprice")
+                   //.setTrialDay(30)
+                   .start();
 
-		Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
-		subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
+        // Retrieve and print subscription information
+        SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+        Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
+        subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
 
-		userStripe.subscription()
-				.cancelAtPeriodEnd("default");
+        // Cancel subscription at the end of the current period
+        userStripe.subscription()
+                   .cancelAtPeriodEnd("default");
 
-		userStripe.subscription()
-				.onTrial("default");
+        // Check if the subscription is on trial
+        userStripe.subscription()
+                   .onTrial("default");
 
-		userStripe.subscription()
-				.ended();
-
-	}
+        // Check if the subscription has ended
+        userStripe.subscription()
+                   .ended();
+    }
 }
 
-class UserTest implements IUserStripe{
-	
-	public void ciao() {
-		
-	}
+/**
+ * A test implementation of the IUserStripe interface.
+ * This is used to simulate a user in the Stripe system for testing purposes.
+ */
+class UserTest implements IUserStripe {
 
-	@Override
-	public String getStripeId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * A placeholder method for testing purposes.
+     */
+    public void ciao() {
 
-	@Override
-	public void setStripeId(String stripeId) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getStripeId() {
+        return null; // Placeholder implementation
+    }
 
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setStripeId(String stripeId) {
+        // Placeholder implementation
+    }
 
-	@Override
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getName() {
+        return null; // Placeholder implementation
+    }
 
-	@Override
-	public void setEmail(String email) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setName(String name) {
+        // Placeholder implementation
+    }
 
-	@Override
-	public String getPhone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getEmail() {
+        return null; // Placeholder implementation
+    }
 
-	@Override
-	public void setPhone(String phone) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setEmail(String email) {
+        // Placeholder implementation
+    }
 
+    @Override
+    public String getPhone() {
+        return null; // Placeholder implementation
+    }
 
-	@Override
-	public String getPreferredLocales() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void setPhone(String phone) {
+        // Placeholder implementation
+    }
 
-	@Override
-	public void setPreferredLocales(String preferredLocales) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public String getPreferredLocales() {
+        return null; // Placeholder implementation
+    }
+
+    @Override
+    public void setPreferredLocales(String preferredLocales) {
+        // Placeholder implementation
+    }
 }

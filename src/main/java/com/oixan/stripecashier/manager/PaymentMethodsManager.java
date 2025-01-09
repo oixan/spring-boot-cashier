@@ -10,35 +10,53 @@ import com.stripe.model.Customer;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.SetupIntent;
 
+/**
+ * Manages payment methods for a Stripe customer, including creation, deletion, and setting default methods.
+ */
 public class PaymentMethodsManager {
 
     CustomerManager customerManager;
-    
+
     StripeBuilder stripeBuilder;
-    
+
+    /**
+     * Constructor for PaymentMethodsManager.
+     *
+     * @param stripeBuilder An instance of {@link StripeBuilder} used for Stripe operations
+     */
     public PaymentMethodsManager(StripeBuilder stripeBuilder) {
         this.stripeBuilder = stripeBuilder;
     }
-    
+
+    /**
+     * Sets the {@link CustomerManager} instance.
+     *
+     * @param customerManager An instance of {@link CustomerManager}
+     * @return The current instance of {@link PaymentMethodsManager}
+     */
     public PaymentMethodsManager setCustomerManager(CustomerManager customerManager) {
         this.customerManager = customerManager;
         return this;
     }
-    
-    
+
+    /**
+     * Creates a SetupIntent for the customer.
+     *
+     * @return The client secret of the created SetupIntent
+     * @throws StripeException If an error occurs while creating the SetupIntent
+     */
     public String createSetupIntent() throws StripeException {
         Map<String, Object> params = new HashMap<>();
         params.put("customer", customerManager.user.getStripeId());
         return SetupIntent.create(params).getClientSecret();
     }
-    
-    
+
     /**
      * Adds a payment method to a Stripe customer.
      *
      * @param paymentMethodId The ID of the Stripe payment method
-     * @return The attached payment method
-     * @throws StripeException 
+     * @return The attached {@link PaymentMethod}
+     * @throws StripeException If an error occurs while attaching the payment method
      */
     public PaymentMethod addPaymentMethod(String paymentMethodId) throws StripeException {
         if (assertCustomerExists() == false)
@@ -51,17 +69,16 @@ public class PaymentMethodsManager {
         }
 
         return stripePaymentMethod;
-    } 
-    
-    
+    }
+
     /**
      * Deletes a payment method by detaching it from the customer.
      * If the payment method is the default and there is only one payment method, it will not be deleted.
      * If there are multiple payment methods, it will be deleted and another will be set as default.
      *
-     * @param paymentMethodId The Stripe PaymentMethod ID to be removed.
-     * @return boolean true if the payment method was successfully removed, false otherwise.
-     * @throws StripeException if the Stripe API call fails.
+     * @param paymentMethodId The Stripe PaymentMethod ID to be removed
+     * @return {@code true} if the payment method was successfully removed, {@code false} otherwise
+     * @throws StripeException If the Stripe API call fails
      */
     public boolean deletePaymentMethod(String paymentMethodId) throws StripeException {
         if (assertCustomerExists() == false) {
@@ -97,8 +114,8 @@ public class PaymentMethodsManager {
     /**
      * Retrieves the list of payment methods for the customer from Stripe.
      *
-     * @return List<PaymentMethod> The list of payment methods.
-     * @throws StripeException if the Stripe API call fails.
+     * @return A list of {@link PaymentMethod}
+     * @throws StripeException If the Stripe API call fails
      */
     public List<PaymentMethod> paymentMethods() throws StripeException {
         if (assertCustomerExists() == false) {
@@ -111,27 +128,26 @@ public class PaymentMethodsManager {
 
         return PaymentMethod.list(params).getData();
     }
-    
-    
+
     /**
-     * Set the provided payment method as the default payment method for the customer.
+     * Sets the provided payment method as the default payment method for the customer.
      *
-     * @param paymentMethod The payment method to be set as default.
-     * @throws StripeException if an error occurs while updating the customer.
+     * @param paymentMethod The {@link PaymentMethod} to be set as default
+     * @throws StripeException If an error occurs while updating the customer
      */
     public void setDefaultPaymentMethod(PaymentMethod paymentMethod) throws StripeException {
         Customer customer = Customer.retrieve(customerManager.user.getStripeId());
 
         customer.update(
-        			Map.of("invoice_settings", Map.of("default_payment_method", paymentMethod.getId()) )
-        		);
+            Map.of("invoice_settings", Map.of("default_payment_method", paymentMethod.getId()))
+        );
     }
-    
-    
+
     /**
-     * Get the default payment method for the customer.
+     * Gets the default payment method for the customer.
      *
-     * @return PaymentMethod | null
+     * @return The default {@link PaymentMethod} or {@code null} if none is set
+     * @throws StripeException If an error occurs while retrieving the customer or payment method
      */
     public PaymentMethod defaultPaymentMethod() throws StripeException {
         if (!this.customerManager.hasStripeId()) {
@@ -149,27 +165,24 @@ public class PaymentMethodsManager {
 
         return null;
     }
-    
-    
+
     /**
      * Verifies that the customer exists on Stripe.
      *
-     * @throws IllegalStateException If the customer has not been created on Stripe
+     * @return {@code true} if the customer exists, {@code false} otherwise
      */
     private boolean assertCustomerExists() {
         return customerManager.hasStripeId();
     }
-    
-    
+
     /**
      * Resolves the Stripe payment method based on its ID.
      *
      * @param paymentMethodId The ID of the Stripe payment method
-     * @return The PaymentMethod object from Stripe
+     * @return The {@link PaymentMethod} object from Stripe
      * @throws StripeException If the payment method cannot be retrieved
      */
     private PaymentMethod resolveStripePaymentMethod(String paymentMethodId) throws StripeException {
         return PaymentMethod.retrieve(paymentMethodId);
     }
-    
 }
