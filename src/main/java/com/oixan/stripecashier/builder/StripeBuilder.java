@@ -56,6 +56,10 @@ public class StripeBuilder {
      *                         including the API key
      */
     public StripeBuilder(StripeProperties stripeProperties) {
+        if (stripeProperties.getApiKey() == null || stripeProperties.getApiKey().isEmpty()) {
+            throw new IllegalStateException("Stripe API key is not configured. Please set stripe.apiKey in your application.properties.");
+        }
+
         Stripe.apiKey = stripeProperties.getApiKey();
     }
 }
