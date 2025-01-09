@@ -14,7 +14,7 @@ public class StripeAutoConfiguration {
   /**
    * The Stripe API key fetched from the application's configuration.
    */
-  public StripeAutoConfiguration(StripeProperties stripeProperties) {
+  public StripeAutoConfiguration() {
    
   }
 }

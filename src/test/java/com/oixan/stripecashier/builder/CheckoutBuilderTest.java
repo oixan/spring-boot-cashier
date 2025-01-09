@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.oixan.stripecashier.BaseTest;
-import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;

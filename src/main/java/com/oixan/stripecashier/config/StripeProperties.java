@@ -1,15 +1,12 @@
 package com.oixan.stripecashier.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * The  class holds the configuration properties related to Stripe.
  * It retrieves the Stripe API key from the application properties and provides a getter method to access it.
  * 
  */
-@Configuration
 @ConfigurationProperties(prefix = "stripe")
 public class StripeProperties {
 
@@ -24,7 +21,6 @@ public class StripeProperties {
     /**
      * The Stripe API key fetched from the application's configuration.
      */
-    @Value("${stripe.apiKey}")
     private String apiKey;
 
     /**
@@ -34,6 +30,15 @@ public class StripeProperties {
      */
     public String getApiKey() {
         return apiKey;
+    }
+
+    /**
+     * Sets the API key for Stripe integration.
+     *
+     * @param apiKey the API key to set
+     */
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
 }

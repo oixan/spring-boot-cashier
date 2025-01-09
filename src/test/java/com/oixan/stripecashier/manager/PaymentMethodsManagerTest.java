@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
-import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;

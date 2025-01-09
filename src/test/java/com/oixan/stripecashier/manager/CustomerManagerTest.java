@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
-import com.oixan.stripecashier.config.StripeProperties;
 import com.oixan.stripecashier.entity.UserAccount;
 import com.oixan.stripecashier.factory.PropertiesFactory;
 import com.oixan.stripecashier.factory.UserServiceFactory;
