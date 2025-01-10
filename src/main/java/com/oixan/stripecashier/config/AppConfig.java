@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({"com.oixan.stripecashier"})
 @EnableJpaRepositories({"com.oixan.stripecashier.repository"})
 @EntityScan({"com.oixan.stripecashier.entity"})
-//@SpringBootApplication
+@SpringBootApplication
 public class AppConfig {
     
     /**
