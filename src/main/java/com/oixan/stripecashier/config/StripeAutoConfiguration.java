@@ -11,7 +11,6 @@ import jakarta.annotation.PostConstruct;
  * The  class holds the configuration properties related to Stripe.
  */
 @Configuration
-@EnableConfigurationProperties(StripeProperties.class)
 public class StripeAutoConfiguration {
   
   private StripeProperties stripeProperties;
