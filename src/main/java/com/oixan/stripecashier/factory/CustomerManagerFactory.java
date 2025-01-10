@@ -29,7 +29,7 @@ public class CustomerManagerFactory {
      * @return A newly created {@link CustomerManager} instance
      */
     public static CustomerManager create(IUserStripe user) {
-        return new CustomerManager(new StripeBuilder(PropertiesFactory.create()))
+        return new CustomerManager(new StripeBuilder())
                     .setUser(user);
     }
 }

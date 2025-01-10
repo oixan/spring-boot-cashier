@@ -36,7 +36,7 @@ public class UserStripeFactory {
     public static IUserStripeAction create(IUserStripe model) {
         // Initialize the CheckoutBuilder
         CheckoutBuilder checkoutBuilder = new CheckoutBuilder(
-                new StripeBuilder(PropertiesFactory.create())
+                new StripeBuilder()
         );
 
         // Create the SubscriptionBuilder using the model

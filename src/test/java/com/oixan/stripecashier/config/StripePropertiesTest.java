@@ -13,7 +13,7 @@ public class StripePropertiesTest extends BaseTest {
     void testStripeApiKey() {
     	
     	String stripeApiKey = PropertiesFactory.create().getApiKey();
-    	new StripeBuilder(PropertiesFactory.create());
+    	new StripeBuilder();
     	
         //assertEquals("test_key_12345", stripeApiKey, "La chiave API non è correttamente impostata!");
         

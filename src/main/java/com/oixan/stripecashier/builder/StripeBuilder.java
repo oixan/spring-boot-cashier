@@ -52,14 +52,8 @@ public class StripeBuilder {
     /**
      * Constructs a new {@code StripeBuilder} instance and initializes Stripe's API key using the provided {@code StripeProperties}.
      *
-     * @param stripeProperties the {@code StripeProperties} object containing Stripe configuration settings,
-     *                         including the API key
      */
-    public StripeBuilder(StripeProperties stripeProperties) {
-        if (stripeProperties.getApiKey() == null || stripeProperties.getApiKey().isEmpty()) {
-            throw new IllegalStateException("Stripe API key is not configured. Please set stripe.apiKey in your application.properties.");
-        }
-
-        Stripe.apiKey = stripeProperties.getApiKey();
+    public StripeBuilder() {
+;
     }
 }

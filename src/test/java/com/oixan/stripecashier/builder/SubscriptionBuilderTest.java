@@ -31,7 +31,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
 	protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
+        StripeBuilder stripeBuilder = new StripeBuilder();
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
@@ -48,7 +48,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
+    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
     	    .setCustomerManager(customerManager);
 
     	// Define a test payment method ID (e.g., a Visa card ID)

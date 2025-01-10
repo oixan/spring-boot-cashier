@@ -28,7 +28,7 @@ public class CustomerManagerTest extends BaseTest {
 	protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
+        StripeBuilder stripeBuilder = new StripeBuilder();
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }

@@ -27,7 +27,7 @@ public class CheckoutBuilderTest extends BaseTest {
 	 protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder(PropertiesFactory.create());
+        StripeBuilder stripeBuilder = new StripeBuilder();
         customerManager = new CustomerManager(stripeBuilder);
         customerManager.setUser(userMock);
     }
@@ -45,7 +45,7 @@ public class CheckoutBuilderTest extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder(PropertiesFactory.create()))
+    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
     	    .setCustomerManager(customerManager);
 
     	// Define a test payment method ID (e.g., a Visa card ID)
@@ -59,7 +59,7 @@ public class CheckoutBuilderTest extends BaseTest {
 
 
         // Step 4: Initialize CheckoutBuilder and create a checkout session
-        String checkoutUrl = new CheckoutBuilder(new StripeBuilder(PropertiesFactory.create()))
+        String checkoutUrl = new CheckoutBuilder(new StripeBuilder())
                                     .setUser(userMock)
                                     .setPriceId("price_1QdxAQCtyihjMHctL68So9pU")
                                     .setQuantity(1)

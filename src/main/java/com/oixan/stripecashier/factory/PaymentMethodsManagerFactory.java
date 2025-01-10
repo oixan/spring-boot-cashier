@@ -30,7 +30,7 @@ public class PaymentMethodsManagerFactory {
      */
     public static PaymentMethodsManager create(CustomerManager cm) {
         return new PaymentMethodsManager(
-                        new StripeBuilder(PropertiesFactory.create())
+                        new StripeBuilder()
                     )
                     .setCustomerManager(cm);
     }
