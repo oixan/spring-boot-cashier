@@ -30,7 +30,6 @@ public class SubscriptionService {
     /**
      * Constructs a new {@link SubscriptionService} instance with the given repository.
      *
-     * @param subscriptionRepository the repository used to access subscription data
      */
     @Autowired
     public SubscriptionService() {

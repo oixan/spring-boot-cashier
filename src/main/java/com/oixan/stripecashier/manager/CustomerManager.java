@@ -42,7 +42,6 @@ public class CustomerManager {
     /**
      * Constructor for CustomerManager.
      *
-     * @param stripeBuilder an instance of    used for Stripe operations
      */
     public CustomerManager() {
     }

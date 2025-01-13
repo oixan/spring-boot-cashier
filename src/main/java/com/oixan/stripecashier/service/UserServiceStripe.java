@@ -28,7 +28,6 @@ public class UserServiceStripe<T extends IUserStripe, D> {
     /**
      * Constructs a new instance with the given repository.
      *
-     * @param repository the repository used to interact with the data store
      */
     public UserServiceStripe() {
     }

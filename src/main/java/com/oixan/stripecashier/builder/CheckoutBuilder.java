@@ -46,7 +46,6 @@ public class CheckoutBuilder {
     /**
      * Constructs a new {@code CheckoutBuilder} instance with the specified   .
      *
-     * @param stripe the    instance for handling Stripe operations
      */
     public CheckoutBuilder() {
     }
