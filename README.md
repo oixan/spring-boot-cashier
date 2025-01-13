@@ -28,7 +28,7 @@ Add the following dependency to your `pom.xml` file:
 Add the following implementation to your `build.gradle` file:
 
 ```groovy
-implementation group: 'io.github.oixan', name: 'spring-boot-cashier', version: '0.0.16'
+implementation group: 'io.github.oixan', name: 'spring-boot-cashier', version: '0.0.19'
 ```
 
 ### 1. Add the interface `IUserStripe` to your User entity:
