@@ -95,6 +95,8 @@ userStripe.paymentMethod()
 userStripe.checkout()
   .setPriceId("idprice")
   .setQuantity(1)
+  .setCancelURL("https://www.test.it/cancel")
+	.setSuccessURL("https://www.test.it/success")
   .complete();
 ```
 
