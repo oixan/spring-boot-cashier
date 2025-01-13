@@ -96,7 +96,7 @@ To get a Existing Sripte customer you can use the following code:
 
 ```
 userStripe.customer()
-  .asStripeCustomer(null);
+  .asStripeCustomer();
 ```
 
 
