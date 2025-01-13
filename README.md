@@ -37,7 +37,24 @@ Here is an example of how to add the `IUserStripe` interface to the `UserEntity`
 
 ```java
 public class UserEntity implements IUserStripe {
-  // Your implementation here
+  ...
+
+    @Column(name = "stripe_id", nullable = true, unique = true)
+    private String stripeId;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "preferred_locales")
+    private String preferredLocales;
+
+  ...
 }
 ```
 
