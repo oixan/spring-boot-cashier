@@ -74,6 +74,17 @@ stripe.apiKey=your_stripe_api_key_here
 
 ## Usage
 
+### PaymentMethod
+
+To manage payment methods, you can use the following code:
+
+```java
+PaymentMethod pm = userStripe.paymentMethod()
+  .addPaymentMethod("pm_card_visa");
+
+userStripe.paymentMethod().setDefaultPaymentMethod(pm);
+```
+
 ### Checkout
 
 To handle the checkout process, you can use the following code:
