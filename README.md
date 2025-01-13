@@ -57,10 +57,12 @@ where the first parameter `T` should be the concrete entity class and the second
 @Configuration
 public class AppConfigTest {
 
-  @Bean
-  public UserService<UserAccount, Long> userService(UserStripeConcreteRepository userStripeConcreteRepository) {
-    return new UserService<>(userStripeConcreteRepository);
-  }
+	  @Bean
+	  public UserServiceStripe<User, Long> userService(UserStripeConcreteRepository userStripeConcreteRepository) {
+		    UserServiceStripe<User, Long> userService = new UserServiceStripe<>();
+	      userService.setRepository(userStripeConcreteRepository);
+	      return userService;
+	  }
 }
 ```
 
