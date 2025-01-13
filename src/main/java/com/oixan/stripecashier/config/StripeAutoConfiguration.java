@@ -39,7 +39,6 @@ public class StripeAutoConfiguration {
   @PostConstruct
   public void config() {
 	  Stripe.apiKey = stripeProperties.getApiKey();
-	  System.out.println("Stripe Api Key: SET: " + stripeProperties.getApiKey());
   }
   
 }

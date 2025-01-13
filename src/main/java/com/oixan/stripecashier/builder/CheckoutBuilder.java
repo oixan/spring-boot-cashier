@@ -80,6 +80,7 @@ public class CheckoutBuilder {
             Session session = Session.create(params);
             return session.getUrl();
         } catch (StripeException e) {
+            System.out.println("Spring boot cashier (oixan) - error: " + e.getMessage());
             return cancelURL;
         }
     }
