@@ -15,7 +15,7 @@ import jakarta.annotation.PostConstruct;
 /**
  * The  class holds the configuration properties related to Stripe.
  */
-@Configuration
+//@Configuration
 @EnableConfigurationProperties(StripeProperties.class)
 @ComponentScan({"com.oixan.stripecashier"})
 @EnableJpaRepositories({"com.oixan.stripecashier.repository"})

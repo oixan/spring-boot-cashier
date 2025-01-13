@@ -79,8 +79,12 @@ stripe.apiKey=your_stripe_api_key_here
 To handle the checkout process, you can use the following code:
 
 ```java
+@Autowired 
+UserStripeFactory userStripeFactory;
+
+
 UserEntity user = new UserEntity();
-IUserStripeAction userStripe = UserStripeFactory.create(user);
+IUserStripeAction userStripe = userStripeFactory.create(user);
 
 userStripe.customer()
   .createAsStripeCustomer(null);
@@ -110,7 +114,11 @@ userStripe.subscribe()
 To interact with the subscription service, you can use the following code:
 
 ```java
-SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+@Autowired 
+SubscriptionServiceFactory subscriptionServiceFactory;
+
+
+SubscriptionService subscriptionService = subscriptionServiceFactory.create();
 
 Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
 subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
