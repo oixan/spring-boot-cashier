@@ -19,7 +19,7 @@ Add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>io.github.oixan</groupId>
   <artifactId>spring-boot-cashier</artifactId>
-  <version>0.0.16</version>
+  <version>0.0.19</version>
 </dependency>
 ```
 
