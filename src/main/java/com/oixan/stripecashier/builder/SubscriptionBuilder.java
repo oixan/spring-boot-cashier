@@ -191,7 +191,7 @@ public class SubscriptionBuilder {
 
         String paymentMethodId = paymentMethod != null && !paymentMethod.isEmpty()
                 ? paymentMethod
-                : paymentMethodsManager.defaultPaymentMethod().getId();
+                : (paymentMethodsManager.defaultPaymentMethod() != null  ? paymentMethodsManager.defaultPaymentMethod().getId() : null );
 
         if (paymentMethodId == null) {
             throw new IllegalArgumentException("Payment method is required.");
