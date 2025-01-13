@@ -31,7 +31,7 @@ Add the following implementation to your `build.gradle` file:
 implementation group: 'io.github.oixan', name: 'spring-boot-cashier', version: '0.0.16'
 ```
 
-1. Add the interface `IUserStripe` to your User entity:
+### 1. Add the interface `IUserStripe` to your User entity:
 
 Here is an example of how to add the `IUserStripe` interface to the `UserEntity` class:
 
@@ -41,7 +41,7 @@ public class UserEntity implements IUserStripe {
 }
 ```
 
-2. Create a concrete repository class similar to this:
+### 2. Create a concrete repository class similar to this:
 
 ```java
 @Repository
@@ -51,7 +51,7 @@ public interface UserStripeConcreteRepository extends UserStripeRepository<UserE
 
 where the first parameter `T` should be the concrete entity class and the second parameter the type of the ID.
 
-3. Initialize a bean to create `UserService` as follows:
+### 3. Initialize a bean to create `UserService` as follows:
 
 ```java
 @Configuration
@@ -66,7 +66,7 @@ public class AppConfigTest {
 }
 ```
 
-4. Add your Stripe API key to the properties file:
+### 4. Add your Stripe API key to the properties file:
 
 ```properties
 stripe.apiKey=your_stripe_api_key_here
