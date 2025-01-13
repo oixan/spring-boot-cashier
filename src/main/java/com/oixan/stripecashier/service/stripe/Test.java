@@ -2,6 +2,7 @@ package com.oixan.stripecashier.service.stripe;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.oixan.stripecashier.entity.Subscription;
@@ -20,12 +21,18 @@ import com.stripe.exception.StripeException;
  */
 @Service
 public class Test {
+	
+	@Autowired
+	UserStripeFactory userStripeFactory;
+	
+	@Autowired
+	SubscriptionServiceFactory subscriptionServiceFactory;
 
-		/**
-		 * Private constructor to prevent instantiation.
-		 */
-		private Test() {
-		}
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Test() {
+	}
 
     /**
      * Runs a series of actions involving Stripe services such as creating a customer,
@@ -35,7 +42,7 @@ public class Test {
      */
     public void test() throws StripeException {
         UserTest user = new UserTest();
-        IUserStripeAction userStripe = UserStripeFactory.create(user);
+        IUserStripeAction userStripe = userStripeFactory.create(user);
 
         // Create a Stripe customer
         userStripe.customer()
@@ -58,7 +65,7 @@ public class Test {
                    .start();
 
         // Retrieve and print subscription information
-        SubscriptionService subscriptionService = SubscriptionServiceFactory.create();
+        SubscriptionService subscriptionService = subscriptionServiceFactory.create();
         Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
         subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
 

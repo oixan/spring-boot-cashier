@@ -10,15 +10,16 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oixan.stripecashier.BaseTest;
-import com.oixan.stripecashier.factory.PropertiesFactory;
+import com.oixan.stripecashier.factory.CustomerManagerFactory;
+import com.oixan.stripecashier.factory.PaymentMethodsManagerFactory;
 import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.factory.UserStripeFactory;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
-
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.Subscription;
@@ -26,14 +27,24 @@ import com.stripe.model.Subscription;
 public class SubscriptionBuilderTest  extends BaseTest {
   
 	 private CustomerManager customerManager;
+	 
+	 @Autowired
+	 private CustomerManagerFactory customerManagerFactory;
+	 
+	 @Autowired 
+	 PaymentMethodsManagerFactory paymentMethodsManagerFactory;
+	 
+	 @Autowired
+	 UserStripeFactory userStripeFactory;
+	 
+	 @Autowired
+	 SubscriptionServiceFactory subscriptionServiceFactory;
 
 	 @BeforeEach
 	protected void setUp() throws StripeException {
         super.setUp();
 
-        StripeBuilder stripeBuilder = new StripeBuilder();
-        customerManager = new CustomerManager(stripeBuilder);
-        customerManager.setUser(userMock);
+        customerManager = customerManagerFactory.create(userMock);
     }
 	 
 	 
@@ -48,8 +59,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
-    	    .setCustomerManager(customerManager);
+    	PaymentMethodsManager paymentMethodsManager = paymentMethodsManagerFactory.create(userMock);
 
     	// Define a test payment method ID (e.g., a Visa card ID)
     	String firstPaymentMethodId = "pm_card_visa";
@@ -62,7 +72,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
 
 
         // Step 4: Initialize SubscriptionBuilder and create a subscription
-        IUserStripeAction userStripe = UserStripeFactory.create(userMock);
+        IUserStripeAction userStripe = userStripeFactory.create(userMock);
         Subscription subscriptionStripe = userStripe.subscribe()
 									                  .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
 									                  .start( null, null, null);
@@ -70,7 +80,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         assertNotNull(subscriptionStripe);                                              
        
 
-        Optional<com.oixan.stripecashier.entity.Subscription> foundSubscription = SubscriptionServiceFactory.create().getSubscriptionByUserIdAndType(stripeId, "default");
+        Optional<com.oixan.stripecashier.entity.Subscription> foundSubscription = subscriptionServiceFactory.create().getSubscriptionByUserIdAndType(stripeId, "default");
         assertTrue(foundSubscription.isPresent());
         assertEquals(subscriptionStripe.getId(), foundSubscription.get().getStripeId());
     }
@@ -87,7 +97,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         String firstPaymentMethodId = "pm_card_visa";
 
         // Step 2: Initialize SubscriptionBuilder and create a new user and new subscription
-        IUserStripeAction userStripe = UserStripeFactory.create(userMock);
+        IUserStripeAction userStripe = userStripeFactory.create(userMock);
         Subscription subscriptionStripe = userStripe.subscribe()
                                                 .setPriceId("price_1JMEKICtyihjMHctwnT3KH9g")
                                                 .startAndCreateStripeUserAndPaymentMethod(
@@ -96,7 +106,7 @@ public class SubscriptionBuilderTest  extends BaseTest {
         assertNotNull(subscriptionStripe);
 
         Optional<com.oixan.stripecashier.entity.Subscription> 
-                    foundSubscription = SubscriptionServiceFactory
+                    foundSubscription = subscriptionServiceFactory
                                                 .create()
                                                 .getSubscriptionByUserIdAndType(
                                                     userStripe.getUserStripe().getStripeId(), "default");

@@ -6,14 +6,17 @@ import org.springframework.context.annotation.PropertySource;
 
 import com.oixan.stripecashier.entity.UserAccount;
 import com.oixan.stripecashier.repository.UserStripeConcreteRepository;
-import com.oixan.stripecashier.service.UserService;
+import com.oixan.stripecashier.service.UserServiceStripe;
 
 @Configuration
 @PropertySource("classpath:application.properties")
 public class AppConfigTest {
+	
 
     @Bean
-    public UserService<UserAccount, Long> userService(UserStripeConcreteRepository userStripeConcreteRepository) {
-        return new UserService<>(userStripeConcreteRepository);
+    public UserServiceStripe<UserAccount, Long> userServiceStripe(UserStripeConcreteRepository userStripeConcreteRepository) {
+        UserServiceStripe<UserAccount, Long> userService = new UserServiceStripe<>();
+        userService.setRepository(userStripeConcreteRepository);
+        return userService;
     }
 }

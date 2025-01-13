@@ -21,7 +21,8 @@ import com.oixan.stripecashier.repository.SubscriptionRepository;
 @Service
 public class SubscriptionService {
 
-    private final SubscriptionRepository subscriptionRepository;
+	@Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     /**
      * Constructs a new {@link SubscriptionService} instance with the given repository.
@@ -29,8 +30,7 @@ public class SubscriptionService {
      * @param subscriptionRepository the repository used to access subscription data
      */
     @Autowired
-    public SubscriptionService(SubscriptionRepository subscriptionRepository) {
-        this.subscriptionRepository = subscriptionRepository;
+    public SubscriptionService() {
     }
 
     /**

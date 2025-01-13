@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
@@ -13,24 +16,28 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.Subscription;
-import com.stripe.param.SubscriptionCreateParams.Item;
 import com.stripe.param.SubscriptionCreateParams;
+import com.stripe.param.SubscriptionCreateParams.Item;
 
 /**
  * The {@code SubscriptionBuilder} class provides functionality to create and manage subscriptions on Stripe.
  * It supports setting custom trial periods, associating customers, handling payment methods, and defining subscription options.
  */
+@Component
 public class SubscriptionBuilder {
+	
+	@Autowired
+	private SubscriptionServiceFactory subscriptionServiceFactory;
 
     /**
      * Manages Stripe customers.
      */
-    private final CustomerManager customerManager;
+    private CustomerManager customerManager;
 
     /**
      * Manages Stripe payment methods.
      */
-    private final PaymentMethodsManager paymentMethodsManager;
+    private PaymentMethodsManager paymentMethodsManager;
 
     /**
      * The price ID for the subscription product.
@@ -43,14 +50,22 @@ public class SubscriptionBuilder {
     private Instant trialExpires;
 
     /**
-     * Constructs a new {@code SubscriptionBuilder} instance with the specified managers.
-     *
-     * @param customerManager the manager for handling Stripe customers
-     * @param paymentMethodsManager the manager for handling Stripe payment methods
+     * Constructs a new instance with the specified managers.
      */
-    public SubscriptionBuilder(CustomerManager customerManager, PaymentMethodsManager paymentMethodsManager) {
-        this.customerManager = customerManager;
-        this.paymentMethodsManager = paymentMethodsManager;
+    public SubscriptionBuilder() {
+
+    }
+    
+    
+    public SubscriptionBuilder setCustomerManager(CustomerManager cm) {
+    	customerManager = cm;
+    	return this;
+    }
+    
+    
+    public SubscriptionBuilder setPaymentMethodsManager(PaymentMethodsManager pm) {
+    	paymentMethodsManager = pm;
+    	return this;
     }
 
     /**
@@ -237,6 +252,6 @@ public class SubscriptionBuilder {
         subscription.setTrialEndsAt(null);
         subscription.setEndsAt(null);
 
-        SubscriptionServiceFactory.create().createSubscription(subscription);
+        subscriptionServiceFactory.create().createSubscription(subscription);
     }
 }

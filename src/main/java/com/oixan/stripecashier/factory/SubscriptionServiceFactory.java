@@ -1,7 +1,9 @@
 package com.oixan.stripecashier.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.service.SubscriptionService;
-import com.oixan.stripecashier.singleton.ApplicationContextSingleton;
 
 /**
  * The {@code SubscriptionServiceFactory} class is responsible for creating and providing a single instance of 
@@ -11,11 +13,12 @@ import com.oixan.stripecashier.singleton.ApplicationContextSingleton;
  * is created and used throughout the application. The instance is retrieved from the Spring application context 
  * via the {@link ApplicationContextSingleton}.
  */
+@Component
 public class SubscriptionServiceFactory {
     
-  
+	@Autowired
     // The cached instance of the SubscriptionService
-    private static SubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
 
     /**
      * Private constructor to prevent instantiation of this singleton class.
@@ -33,17 +36,7 @@ public class SubscriptionServiceFactory {
      *
      * @return The {@link SubscriptionService} instance
      */
-    public static SubscriptionService create() {
-        // Return the existing SubscriptionService if already created
-        if (subscriptionService != null) {
-            return subscriptionService;
-        }
-
-        // Create and cache the SubscriptionService instance from the Spring application context
-        subscriptionService = ApplicationContextSingleton
-                .create()
-                .getBean(SubscriptionService.class);
-
+    public SubscriptionService create() {
         return subscriptionService;
     }
 }

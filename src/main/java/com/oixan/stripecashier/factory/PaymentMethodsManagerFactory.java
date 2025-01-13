@@ -1,6 +1,10 @@
 package com.oixan.stripecashier.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.builder.StripeBuilder;
+import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
 
@@ -12,7 +16,14 @@ import com.oixan.stripecashier.manager.PaymentMethodsManager;
  * <p>The factory method uses the {@link PropertiesFactory} to create the required properties for the {@link StripeBuilder},
  * which is then passed to the {@link PaymentMethodsManager}.
  */
+@Component
 public class PaymentMethodsManagerFactory {
+	
+	@Autowired
+	PaymentMethodsManager paymentMethodsManager;
+	
+	@Autowired
+	CustomerManagerFactory customerManagerFactory;
 
     /**
 	 * Private constructor to prevent instantiation of this singleton class.
@@ -28,10 +39,10 @@ public class PaymentMethodsManagerFactory {
      * @param cm The {@link CustomerManager} instance that manages customer information
      * @return A newly created {@link PaymentMethodsManager} instance
      */
-    public static PaymentMethodsManager create(CustomerManager cm) {
-        return new PaymentMethodsManager(
-                        new StripeBuilder()
-                    )
+    public PaymentMethodsManager create(IUserStripe user) {
+    	CustomerManager cm = customerManagerFactory.create(user);
+    	
+        return paymentMethodsManager
                     .setCustomerManager(cm);
     }
 }

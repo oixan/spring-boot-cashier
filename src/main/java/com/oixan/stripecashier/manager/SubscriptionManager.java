@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.oixan.stripecashier.factory.SubscriptionServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.service.SubscriptionService;
 import com.stripe.exception.StripeException;
@@ -14,6 +16,7 @@ import com.stripe.model.Subscription;
 /**
  * Manages subscription-related operations.
  */
+@Component
 public class SubscriptionManager {
 
     /**
@@ -24,6 +27,7 @@ public class SubscriptionManager {
     /**
      * Service for managing subscriptions.
      */
+    @Autowired
     private SubscriptionService subscriptionService;
 
     /**
@@ -32,7 +36,6 @@ public class SubscriptionManager {
      * using the SubscriptionService.
      */
     public SubscriptionManager() {
-        this.subscriptionService = SubscriptionServiceFactory.create();
     }
 
 

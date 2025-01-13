@@ -3,6 +3,8 @@ package com.oixan.stripecashier.service;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.repository.UserStripeRepository;
 import com.oixan.stripecashier.support.Classes;
@@ -13,17 +15,23 @@ import com.oixan.stripecashier.support.Classes;
  * @param <T> the type of user entity extending
  * @param <D> the type of the user ID
  */
-public class UserService<T extends IUserStripe, D> {
+@ConditionalOnMissingBean(UserServiceStripe.class)
+public class UserServiceStripe<T extends IUserStripe, D> {
 
-    private final UserStripeRepository<T, D> repository;
+    private UserStripeRepository<T, D> repository;
 
     /**
      * Constructs a new instance with the given repository.
      *
      * @param repository the repository used to interact with the data store
      */
-    public UserService(UserStripeRepository<T, D> repository) {
-        this.repository = repository;
+    public UserServiceStripe() {
+    }
+    
+    
+    public UserServiceStripe<T, D> setRepository(UserStripeRepository<T, D> userStripeConcreteRepository){
+    	this.repository = userStripeConcreteRepository;
+    	return this;
     }
 
     /**

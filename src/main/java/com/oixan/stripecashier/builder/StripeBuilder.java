@@ -2,13 +2,13 @@ package com.oixan.stripecashier.builder;
 
 import java.util.function.BiFunction;
 
-import com.oixan.stripecashier.config.StripeProperties;
-import com.stripe.Stripe;
+import org.springframework.stereotype.Component;
 
 /**
  * The {@code StripeBuilder} class is responsible for configuring and initializing Stripe's API settings.
  * It manages settings such as subscription behavior, tax calculations, currency, and custom formatters.
  */
+@Component
 public class StripeBuilder {
 
     /**

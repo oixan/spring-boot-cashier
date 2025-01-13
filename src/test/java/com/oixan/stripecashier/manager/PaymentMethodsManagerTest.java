@@ -10,31 +10,35 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oixan.stripecashier.BaseTest;
 import com.oixan.stripecashier.builder.StripeBuilder;
-import com.oixan.stripecashier.factory.PropertiesFactory;
+import com.oixan.stripecashier.factory.CustomerManagerFactory;
+import com.oixan.stripecashier.factory.PaymentMethodsManagerFactory;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.PaymentMethodCollection;
 
 public class PaymentMethodsManagerTest extends BaseTest {
 
-		private PaymentMethodsManager paymentMethodsManager;
-		private CustomerManager customerManager;
+	private PaymentMethodsManager paymentMethodsManager;
+	private CustomerManager customerManager;
+	
+	 @Autowired
+	 private CustomerManagerFactory customerManagerFactory;
+	 
+	 @Autowired 
+	 PaymentMethodsManagerFactory paymentMethodsManagerFactory;
 
 	 @BeforeEach
 	 protected void setUp() throws StripeException {
 		super.setUp();
 
 		StripeBuilder stripeBuilder = new StripeBuilder();
-		customerManager = new CustomerManager(stripeBuilder);
-		customerManager.setUser(userMock);
+		customerManager = customerManagerFactory.create(userMock);
 		
-		paymentMethodsManager = new PaymentMethodsManager(
-									new StripeBuilder()
-								)
-								.setCustomerManager(customerManager);
+		paymentMethodsManager = paymentMethodsManagerFactory.create(userMock);
   }
 	 
 
@@ -101,10 +105,6 @@ public class PaymentMethodsManagerTest extends BaseTest {
     	String stripeCustomerId = customerManager.createAsStripeCustomer(customerOptions);
     	assertNotNull(stripeCustomerId, "Stripe customer ID should not be null");
 
-    	// Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
-    	    .setCustomerManager(customerManager);
-
     	// Define a test payment method ID (e.g., a Visa card ID)
     	String firstPaymentMethodId = "pm_card_visa";
 
@@ -134,10 +134,7 @@ public class PaymentMethodsManagerTest extends BaseTest {
         // Create the customer and retrieve the customer ID
         String stripeCustomerId = customerManager.createAsStripeCustomer(customerOptions);
         assertNotNull(stripeCustomerId, "Stripe customer ID should not be null");
-
-        // Step 2: Initialize PaymentMethodsManager and add a payment method
-        PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
-            .setCustomerManager(customerManager);
+        
 
         // Define a test payment method ID (e.g., a Visa card ID)
         String firstPaymentMethodId = "pm_card_visa";

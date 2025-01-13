@@ -1,5 +1,8 @@
 package com.oixan.stripecashier.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.manager.SubscriptionManager;
 
@@ -10,7 +13,11 @@ import com.oixan.stripecashier.manager.SubscriptionManager;
  * The factory class ensures that the {@link SubscriptionManager} is properly initialized with the given user
  * through the {@link SubscriptionManager#setUser(IUserStripe)} method.
  */
+@Component
 public class SubscriptionManagerFactory {
+	
+	@Autowired
+	SubscriptionManager subscriptionManager;
 
     /**
      * Private constructor to prevent instantiation of this singleton class.
@@ -26,9 +33,9 @@ public class SubscriptionManagerFactory {
      * @param user The user for which the subscription manager is created
      * @return The {@link SubscriptionManager} instance initialized with the provided user
      */
-    public static SubscriptionManager create(IUserStripe user) {
+    public SubscriptionManager create(IUserStripe user) {
         // Create and return a new SubscriptionManager initialized with the given user
-        return new SubscriptionManager()
-                .setUser(user);
+        return subscriptionManager
+                	.setUser(user);
     }
 }

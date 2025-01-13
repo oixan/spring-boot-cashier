@@ -1,5 +1,8 @@
 package com.oixan.stripecashier.builder;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -11,11 +14,13 @@ import com.stripe.param.checkout.SessionCreateParams;
  * It allows setting various parameters such as price ID, quantity, success URL, cancel URL, and user.
  * The {@code complete} method finalizes the checkout session creation and returns the session URL.
  */
+@Component
 public class CheckoutBuilder {
 
     /**
      * The {@code StripeBuilder} instance used for Stripe operations.
      */
+	@Autowired
     private StripeBuilder stripe;
 
     /**
@@ -48,8 +53,7 @@ public class CheckoutBuilder {
      *
      * @param stripe the {@code StripeBuilder} instance for handling Stripe operations
      */
-    public CheckoutBuilder(StripeBuilder stripe) {
-        this.stripe = stripe;
+    public CheckoutBuilder() {
     }
 
     /**

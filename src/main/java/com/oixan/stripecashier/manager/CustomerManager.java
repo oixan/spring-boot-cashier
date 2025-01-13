@@ -3,10 +3,13 @@ package com.oixan.stripecashier.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.factory.UserServiceFactory;
 import com.oixan.stripecashier.interfaces.IUserStripe;
-import com.oixan.stripecashier.service.UserService;
+import com.oixan.stripecashier.service.UserServiceStripe;
 import com.oixan.stripecashier.support.Classes;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -15,6 +18,7 @@ import com.stripe.model.Customer;
  * Manages Stripe customer operations for a user.
  * Provides methods for retrieving, creating, and managing Stripe customer data.
  */
+@Component
 public class CustomerManager {
 
     IUserStripe user;
@@ -23,15 +27,18 @@ public class CustomerManager {
 
     Class<?> userId;
 
+    @Autowired
     StripeBuilder stripeBuilder;
+    
+    @Autowired
+    UserServiceFactory userServiceFactory;
 
     /**
      * Constructor for CustomerManager.
      *
      * @param stripeBuilder an instance of {@link StripeBuilder} used for Stripe operations
      */
-    public CustomerManager(StripeBuilder stripeBuilder) {
-        this.stripeBuilder = stripeBuilder;
+    public CustomerManager() {
     }
 
     /**
@@ -97,7 +104,7 @@ public class CustomerManager {
         this.user.setStripeId(customer.getId());
 
         // Optionally save the customer ID in your database, depending on your application's needs
-        UserService<T, ID> userService = UserServiceFactory.create((Class<T>) userClass, (Class<ID>) userId);
+        UserServiceStripe<T, ID> userService = userServiceFactory.create((Class<T>) userClass, (Class<ID>) userId);
         userService.updateStripeId(this.user, this.user.getStripeId());
 
         return this.user.getStripeId();

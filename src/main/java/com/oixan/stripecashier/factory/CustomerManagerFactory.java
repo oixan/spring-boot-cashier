@@ -1,5 +1,8 @@
 package com.oixan.stripecashier.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.manager.CustomerManager;
@@ -12,7 +15,11 @@ import com.oixan.stripecashier.manager.CustomerManager;
  * <p>The factory uses the {@link StripeBuilder} to build the required configuration for the manager,
  * leveraging the {@link PropertiesFactory} to create the necessary properties.
  */
+@Component
 public class CustomerManagerFactory {
+	
+	@Autowired
+	CustomerManager customerManager;
 
     /**
 	 * Private constructor to prevent instantiation of this singleton class.
@@ -28,8 +35,7 @@ public class CustomerManagerFactory {
      * @param user The user who will interact with the Stripe customer manager
      * @return A newly created {@link CustomerManager} instance
      */
-    public static CustomerManager create(IUserStripe user) {
-        return new CustomerManager(new StripeBuilder())
-                    .setUser(user);
+    public CustomerManager create(IUserStripe user) {
+        return customerManager.setUser(user);
     }
 }

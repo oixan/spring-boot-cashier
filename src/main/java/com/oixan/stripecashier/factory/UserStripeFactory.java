@@ -1,7 +1,9 @@
 package com.oixan.stripecashier.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.builder.CheckoutBuilder;
-import com.oixan.stripecashier.builder.StripeBuilder;
 import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
 import com.oixan.stripecashier.interfaces.IUserStripeAction;
@@ -16,7 +18,23 @@ import com.oixan.stripecashier.proxy.UserStripeActionProxy;
  * This factory encapsulates the creation of various dependencies required by {@link IUserStripeAction}
  * and returns a proxy implementation using {@link UserStripeActionProxy}.
  */
+@Component
 public class UserStripeFactory {
+	
+	@Autowired
+	SubscriptionBuilderFactory subscriptionBuilderFactory;
+	
+	@Autowired
+	CheckoutBuilder checkoutBuilder;
+	
+	@Autowired
+	SubscriptionManagerFactory subscriptionManagerFactory;
+	
+	@Autowired
+	CustomerManagerFactory customerManagerFactory;
+	
+	@Autowired
+	PaymentMethodsManagerFactory paymentMethodsManagerFactory;
 
     /**
      * Default constructor for {@code UserStripeFactory}.
@@ -33,23 +51,21 @@ public class UserStripeFactory {
      * @param model The user model implementing {@link IUserStripe} interface
      * @return A proxied {@link IUserStripeAction} instance configured with the necessary dependencies
      */
-    public static IUserStripeAction create(IUserStripe model) {
-        // Initialize the CheckoutBuilder
-        CheckoutBuilder checkoutBuilder = new CheckoutBuilder(
-                new StripeBuilder()
-        );
+    public IUserStripeAction create(IUserStripe model) {
+    	
+    	checkoutBuilder.setUser(model);
 
         // Create the SubscriptionBuilder using the model
-        SubscriptionBuilder subscriptionBuilder = SubscriptionBuilderFactory.create(model);
+        SubscriptionBuilder subscriptionBuilder = subscriptionBuilderFactory.create(model);
 
         // Create the SubscriptionManager for the model
-        SubscriptionManager subscriptionManager = SubscriptionManagerFactory.create(model);
+        SubscriptionManager subscriptionManager = subscriptionManagerFactory.create(model);
 
         // Create the CustomerManager for the model
-        CustomerManager customerManager = CustomerManagerFactory.create(model);
+        CustomerManager customerManager = customerManagerFactory.create(model);
 
         // Create the PaymentMethodsManager using the CustomerManager
-        PaymentMethodsManager paymentMethodsManager = PaymentMethodsManagerFactory.create(customerManager);
+        PaymentMethodsManager paymentMethodsManager = paymentMethodsManagerFactory.create(model);
 
         // Create and return the proxy implementation of IUserStripeAction
         return UserStripeActionProxy.createProxy(

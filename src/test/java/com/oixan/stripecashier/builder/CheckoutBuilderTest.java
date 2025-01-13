@@ -9,12 +9,13 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oixan.stripecashier.BaseTest;
-import com.oixan.stripecashier.factory.PropertiesFactory;
+import com.oixan.stripecashier.factory.CustomerManagerFactory;
+import com.oixan.stripecashier.factory.PaymentMethodsManagerFactory;
 import com.oixan.stripecashier.manager.CustomerManager;
 import com.oixan.stripecashier.manager.PaymentMethodsManager;
-
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 
@@ -22,14 +23,22 @@ import com.stripe.model.PaymentMethod;
 public class CheckoutBuilderTest extends BaseTest {
   
 	 private CustomerManager customerManager;
+	 
+	 @Autowired
+	 private CustomerManagerFactory customerManagerFactory;
+	 
+	 @Autowired 
+	 PaymentMethodsManagerFactory paymentMethodsManagerFactory;
+	 
+	 @Autowired
+	 CheckoutBuilder checkoutBuilder;
 
 	 @BeforeEach
 	 protected void setUp() throws StripeException {
         super.setUp();
 
         StripeBuilder stripeBuilder = new StripeBuilder();
-        customerManager = new CustomerManager(stripeBuilder);
-        customerManager.setUser(userMock);
+        customerManager = customerManagerFactory.create(userMock);
     }
 
 	
@@ -45,8 +54,7 @@ public class CheckoutBuilderTest extends BaseTest {
         assertNotNull(stripeId);
 
         // Step 2: Initialize PaymentMethodsManager and add a payment method
-    	PaymentMethodsManager paymentMethodsManager = new PaymentMethodsManager(new StripeBuilder())
-    	    .setCustomerManager(customerManager);
+    	PaymentMethodsManager paymentMethodsManager = paymentMethodsManagerFactory.create(userMock);
 
     	// Define a test payment method ID (e.g., a Visa card ID)
     	String firstPaymentMethodId = "pm_card_visa";
@@ -59,7 +67,7 @@ public class CheckoutBuilderTest extends BaseTest {
 
 
         // Step 4: Initialize CheckoutBuilder and create a checkout session
-        String checkoutUrl = new CheckoutBuilder(new StripeBuilder())
+        String checkoutUrl = checkoutBuilder
                                     .setUser(userMock)
                                     .setPriceId("price_1QdxAQCtyihjMHctL68So9pU")
                                     .setQuantity(1)

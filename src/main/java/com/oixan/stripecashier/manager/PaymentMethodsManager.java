@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.oixan.stripecashier.builder.StripeBuilder;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -13,19 +16,18 @@ import com.stripe.model.SetupIntent;
 /**
  * Manages payment methods for a Stripe customer, including creation, deletion, and setting default methods.
  */
+@Component
 public class PaymentMethodsManager {
 
     CustomerManager customerManager;
 
+    @Autowired
     StripeBuilder stripeBuilder;
 
     /**
      * Constructor for PaymentMethodsManager.
-     *
-     * @param stripeBuilder An instance of {@link StripeBuilder} used for Stripe operations
      */
-    public PaymentMethodsManager(StripeBuilder stripeBuilder) {
-        this.stripeBuilder = stripeBuilder;
+    public PaymentMethodsManager() {
     }
 
     /**
