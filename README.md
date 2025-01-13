@@ -74,6 +74,26 @@ stripe.apiKey=your_stripe_api_key_here
 
 ## Usage
 
+### Customer
+
+To create a Stripe customer from a user that implements `IUserStripe`, you can use the following code:
+
+```java
+userStripe.customer()
+  .createAsStripeCustomer(null);
+
+userStripe.customer()
+  .createOrGetStripeCustomer(null);
+```
+
+To get a Existing Sripte customer you can use the following code:
+
+```
+userStripe.customer()
+  .asStripeCustomer(null);
+```
+
+
 ### PaymentMethod
 
 To manage payment methods, you can use the following code:
