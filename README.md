@@ -9,6 +9,28 @@ Spring Boot Cashier provides an expressive, fluent interface to Stripe's subscri
 
 To install Spring Boot Cashier, follow these steps:
 
+To install the Spring Boot Cashier package, you can use either Maven or Gradle.
+
+### Maven
+
+Add the following dependency to your `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>io.github.oixan</groupId>
+  <artifactId>spring-boot-cashier</artifactId>
+  <version>0.0.16</version>
+</dependency>
+```
+
+### Gradle
+
+Add the following implementation to your `build.gradle` file:
+
+```groovy
+implementation group: 'io.github.oixan', name: 'spring-boot-cashier', version: '0.0.16'
+```
+
 1. Add the interface `IUserStripe` to your User entity:
 
 Here is an example of how to add the `IUserStripe` interface to the `UserEntity` class:
