@@ -79,6 +79,9 @@ stripe.apiKey=your_stripe_api_key_here
 To create a Stripe customer from a user that implements `IUserStripe`, you can use the following code:
 
 ```java
+@Autowired 
+UserStripeFactory userStripeFactory;
+
 UserEntity user = new UserEntity();
 IUserStripeAction userStripe = userStripeFactory.create(user)
 
