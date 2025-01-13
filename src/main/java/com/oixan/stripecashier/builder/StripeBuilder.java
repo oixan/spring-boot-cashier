@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import org.springframework.stereotype.Component;
 
 /**
- * The {@code StripeBuilder} class is responsible for configuring and initializing Stripe's API settings.
+ * The    class is responsible for configuring and initializing Stripe's API settings.
  * It manages settings such as subscription behavior, tax calculations, currency, and custom formatters.
  */
 @Component
@@ -50,7 +50,7 @@ public class StripeBuilder {
     private static BiFunction<Integer, String, String> formatCurrencyUsing;
 
     /**
-     * Constructs a new {@code StripeBuilder} instance and initializes Stripe's API key using the provided {@code StripeProperties}.
+     * Constructs a new    instance and initializes Stripe's API key using the provided {@code StripeProperties}.
      *
      */
     public StripeBuilder() {

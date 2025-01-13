@@ -18,6 +18,11 @@ import com.oixan.stripecashier.support.Classes;
 @ConditionalOnMissingBean(UserServiceStripe.class)
 public class UserServiceStripe<T extends IUserStripe, D> {
 
+    /**
+     * The repository used to interact with the data store.
+     * @param <T> the type of user entity extending
+     * @param <D> the type of the user ID
+     */
     private UserStripeRepository<T, D> repository;
 
     /**
@@ -29,6 +34,12 @@ public class UserServiceStripe<T extends IUserStripe, D> {
     }
     
     
+    /**
+     * Sets the repository used to interact with the data store.
+     *
+     * @param userStripeConcreteRepository the repository used to interact with the data store
+     * @return the current instance of the service
+     */
     public UserServiceStripe<T, D> setRepository(UserStripeRepository<T, D> userStripeConcreteRepository){
     	this.repository = userStripeConcreteRepository;
     	return this;

@@ -57,12 +57,23 @@ public class SubscriptionBuilder {
     }
     
     
+    /**
+     * Sets the customer manager for the subscription.
+     *
+     * @param cm the customer manager
+     * @return the current instance of {@code SubscriptionBuilder} for method chaining
+     */
     public SubscriptionBuilder setCustomerManager(CustomerManager cm) {
     	customerManager = cm;
     	return this;
     }
     
-    
+    /**
+     * Sets the payment methods manager for the subscription.
+     *
+     * @param pm the payment methods manager
+     * @return the current instance of {@code SubscriptionBuilder} for method chaining
+     */
     public SubscriptionBuilder setPaymentMethodsManager(PaymentMethodsManager pm) {
     	paymentMethodsManager = pm;
     	return this;

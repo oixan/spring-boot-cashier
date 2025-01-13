@@ -27,16 +27,22 @@ public class CustomerManager {
 
     Class<?> userId;
 
+    /**
+     * The {@code StripeBuilder} instance for handling Stripe operations.
+     */
     @Autowired
     StripeBuilder stripeBuilder;
     
+    /**
+     * The {@code UserServiceFactory} instance for creating user service instances.
+     */
     @Autowired
     UserServiceFactory userServiceFactory;
 
     /**
      * Constructor for CustomerManager.
      *
-     * @param stripeBuilder an instance of {@link StripeBuilder} used for Stripe operations
+     * @param stripeBuilder an instance of    used for Stripe operations
      */
     public CustomerManager() {
     }
@@ -145,7 +151,7 @@ public class CustomerManager {
      *
      * @param <T> the type of user implementing {@link IUserStripe}
      * @param user the {@link IUserStripe} instance to be set
-     * @return the current instance of {@link CustomerManager}
+     * @return the current instance of   
      * @throws RuntimeException if an error occurs while determining the user's ID field
      */
     public <T extends IUserStripe> CustomerManager setUser(T user) {

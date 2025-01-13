@@ -11,7 +11,7 @@ import com.oixan.stripecashier.service.SubscriptionService;
  * <p>
  * This class uses the singleton pattern to ensure that only one instance of the {@link SubscriptionService} 
  * is created and used throughout the application. The instance is retrieved from the Spring application context 
- * via the {@link ApplicationContextSingleton}.
+ * via the .
  */
 @Component
 public class SubscriptionServiceFactory {
@@ -32,7 +32,7 @@ public class SubscriptionServiceFactory {
      * Retrieves the {@link SubscriptionService} instance from the application context, creating it if necessary.
      * <p>
      * If the instance of {@link SubscriptionService} has already been created, it will be returned directly.
-     * Otherwise, it will be retrieved from the Spring application context via the {@link ApplicationContextSingleton}.
+     * Otherwise, it will be retrieved from the Spring application context via the   .
      *
      * @return The {@link SubscriptionService} instance
      */

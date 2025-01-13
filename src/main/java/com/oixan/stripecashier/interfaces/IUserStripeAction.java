@@ -44,7 +44,7 @@ public interface IUserStripeAction {
     /**
      * Provides access to customer management functionalities.
      *
-     * @return an instance of {@link CustomerManager} to manage customer data.
+     * @return an instance of    to manage customer data.
      */
     CustomerManager customer();
 

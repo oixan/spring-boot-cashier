@@ -21,6 +21,9 @@ import com.oixan.stripecashier.repository.SubscriptionRepository;
 @Service
 public class SubscriptionService {
 
+    /**
+     * The repository used to access subscription data.
+     */
 	@Autowired
     private SubscriptionRepository subscriptionRepository;
 

@@ -31,9 +31,9 @@ public class PaymentMethodsManager {
     }
 
     /**
-     * Sets the {@link CustomerManager} instance.
+     * Sets the    instance.
      *
-     * @param customerManager An instance of {@link CustomerManager}
+     * @param customerManager An instance of   
      * @return The current instance of {@link PaymentMethodsManager}
      */
     public PaymentMethodsManager setCustomerManager(CustomerManager customerManager) {

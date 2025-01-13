@@ -17,11 +17,6 @@ import com.stripe.param.checkout.SessionCreateParams;
 @Component
 public class CheckoutBuilder {
 
-    /**
-     * The {@code StripeBuilder} instance used for Stripe operations.
-     */
-	@Autowired
-    private StripeBuilder stripe;
 
     /**
      * The ID of the price for the product in Stripe.
@@ -49,9 +44,9 @@ public class CheckoutBuilder {
     private IUserStripe user;
 
     /**
-     * Constructs a new {@code CheckoutBuilder} instance with the specified {@code StripeBuilder}.
+     * Constructs a new {@code CheckoutBuilder} instance with the specified   .
      *
-     * @param stripe the {@code StripeBuilder} instance for handling Stripe operations
+     * @param stripe the    instance for handling Stripe operations
      */
     public CheckoutBuilder() {
     }
