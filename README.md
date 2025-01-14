@@ -192,7 +192,7 @@ To swap the subscription item within the same subscription type "default" to a n
 ```java
 
   Subscription stripeSubscription = userStripe.subscription()
-                                               .swapItemSubscription("default", "price_1Qgpw4CtyihjMHctcKBNCy2e");
+                                               .swapItemSubscription("default", "price_id");
 ```
 
 #### Cancel Subscription
