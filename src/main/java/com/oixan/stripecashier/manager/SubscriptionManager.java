@@ -245,11 +245,14 @@ public class SubscriptionManager {
     
     /**
      * Swaps the subscription item with a new price.
+     * <p>
+     * This method updates the subscription by replacing the current item with a new price.
+     * The update is applied immediately with proration, and the old subscription items are removed.
      * 
-     * @param type
-     * @param newPriceId
-     * @return Subscription
-     * @throws StripeException
+     * @param type The type of the subscription to be updated.
+     * @param newPriceId The new price ID to replace the current item.
+     * @return The updated subscription.
+     * @throws StripeException If there is an error updating the subscription with Stripe.
      */
     public Subscription swapItemSubscription(String type, String newPriceId) throws StripeException {
         // Retrieve the subscription from the database based on the customer and type

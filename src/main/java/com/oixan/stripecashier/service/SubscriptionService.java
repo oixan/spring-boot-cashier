@@ -68,9 +68,10 @@ public class SubscriptionService {
     }
 
     /**
-     * Updates an existing subscription.
+     * Updates an existing subscription with the provided updated details.
      * 
-     * @param updatedSubscription
+     * @param updatedSubscription The subscription object containing the updated details.
+     * @throws IllegalArgumentException If no subscription is found for the provided user ID and type.
      */
     public void updateSubscription(Subscription updatedSubscription) {
         Optional<Subscription> existingSubscription = subscriptionRepository.findByUserIdAndType(updatedSubscription.getUserId(), updatedSubscription.getType());

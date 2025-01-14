@@ -60,7 +60,7 @@ public class StripeBuilder {
     /**
      * Sets the custom currency formatter for displaying currency values.
      *
-     * @param formatter the custom currency formatter
+     * @return boolean
      */
     public boolean isDeactivatePastDue() {
         return deactivatePastDue;
@@ -69,7 +69,7 @@ public class StripeBuilder {
     /**
      * Sets the custom currency formatter for displaying currency values.
      *
-     * @param formatter the custom currency formatter
+     * @param deactivatePastDue the custom currency formatter
      */
     public void setDeactivatePastDue(boolean deactivatePastDue) {
         this.deactivatePastDue = deactivatePastDue;
@@ -87,7 +87,7 @@ public class StripeBuilder {
     /**
      * Sets the custom currency formatter for displaying currency values.
      *
-     * @param formatter the custom currency formatter
+     * @param deactivateIncomplete the custom currency formatter
      */
     public void setDeactivateIncomplete(boolean deactivateIncomplete) {
         this.deactivateIncomplete = deactivateIncomplete;

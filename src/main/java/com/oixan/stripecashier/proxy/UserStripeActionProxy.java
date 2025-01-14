@@ -36,6 +36,7 @@ public class UserStripeActionProxy implements InvocationHandler {
      * @param subscriptionBuilder the builder for managing subscriptions.
      * @param subscriptionManager the manager for handling subscription actions.
      * @param customerManager the manager for handling customer-related operations.
+     * @param chargeBuilder the builder for charge operation.
      * @param paymentMethodsManager the manager for managing payment methods.
      */
     public UserStripeActionProxy(
@@ -102,6 +103,7 @@ public class UserStripeActionProxy implements InvocationHandler {
      * @param subscriptionManager the manager for handling subscription actions.
      * @param customerManager the manager for handling customer-related operations.
      * @param paymentMethodsManager the manager for managing payment methods.
+     * @param chargeBuilder the builder for charge operation.
      * @param <T> the type of IUserStripeAction.
      * @return a new IUserStripeAction proxy instance.
      */
