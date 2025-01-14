@@ -68,6 +68,29 @@ public class SubscriptionService {
     }
 
     /**
+     * Updates an existing subscription.
+     * 
+     * @param updatedSubscription
+     */
+    public void updateSubscription(Subscription updatedSubscription) {
+        Optional<Subscription> existingSubscription = subscriptionRepository.findByUserIdAndType(updatedSubscription.getUserId(), updatedSubscription.getType());
+        
+        if (!existingSubscription.isPresent()) {
+            throw new IllegalArgumentException("Subscription with ID " + updatedSubscription.getUserId() + " and type: " + updatedSubscription.getType() + " does not exist.");
+        }
+
+        Subscription existingSub = existingSubscription.get();
+
+        existingSub.setStripeStatus(updatedSubscription.getStripeStatus());
+        existingSub.setStripePrice(updatedSubscription.getStripePrice());
+        existingSub.setQuantity(updatedSubscription.getQuantity());
+        existingSub.setEndsAt(updatedSubscription.getEndsAt());
+        existingSub.setStripeId(updatedSubscription.getStripeId());
+
+        subscriptionRepository.save(existingSub);
+    }
+    
+    /**
      * Deletes a subscription by its ID.
      *
      * @param id the ID of the subscription to be deleted

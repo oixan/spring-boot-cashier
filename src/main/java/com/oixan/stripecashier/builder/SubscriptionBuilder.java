@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,7 +222,7 @@ public class SubscriptionBuilder {
 
         return stripeSubscription;
     }
-
+    
     /**
      * Adds additional metadata and options for the subscription.
      *

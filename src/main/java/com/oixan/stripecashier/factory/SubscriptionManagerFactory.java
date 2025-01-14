@@ -18,6 +18,9 @@ public class SubscriptionManagerFactory {
 	
 	@Autowired
 	SubscriptionManager subscriptionManager;
+	
+	@Autowired
+	CustomerManagerFactory customerManagerFactory;
 
     /**
      * Private constructor to prevent instantiation of this singleton class.
@@ -36,6 +39,7 @@ public class SubscriptionManagerFactory {
     public SubscriptionManager create(IUserStripe user) {
         // Create and return a new SubscriptionManager initialized with the given user
         return subscriptionManager
-                	.setUser(user);
+                	.setUser(user)
+                	.setCustomerManager(customerManagerFactory.create(user));
     }
 }

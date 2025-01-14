@@ -144,6 +144,15 @@ public class CustomerManager {
             return this.asStripeCustomer();
         }
     }
+    
+    /**
+     * Retrieve the user for the CustomerManager.
+     *
+     * @return the user implementing {@link IUserStripe}
+     */
+    public IUserStripe getUser() {
+    	return user;
+    }
 
     /**
      * Sets the user for the CustomerManager.
