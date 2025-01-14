@@ -161,7 +161,7 @@ userStripe.checkout()
 You can also handle charge single payment made by the customer using Stripe.
 
 ```java
-  PaymentIntent paymentIntent = userActionMock.charge()
+  PaymentIntent paymentIntent = userStripe.charge()
                                              .pay(25.99);
 ```
 
@@ -170,7 +170,7 @@ You can also handle charge single payment made by the customer using Stripe.
 You can also handle refunds for a payment made by the customer using Stripe.
 
 ```java
-userActionMock.charge()
+userStripe.charge()
             .refund(paymentIntent.getId());
 ```
 
