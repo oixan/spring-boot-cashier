@@ -154,6 +154,26 @@ userStripe.checkout()
   .complete();
 ```
 
+### Charges
+
+#### Charge
+
+You can also handle charge single payment made by the customer using Stripe.
+
+```java
+  PaymentIntent paymentIntent = userActionMock.charge()
+                                             .pay(25.99);
+```
+
+#### Refaunds
+
+You can also handle refunds for a payment made by the customer using Stripe.
+
+```java
+userActionMock.charge()
+            .refund(paymentIntent.getId());
+```
+
 ### Subscription
 
 To manage subscriptions, you can use the following code:
