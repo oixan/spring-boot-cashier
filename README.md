@@ -195,21 +195,6 @@ To swap the subscription item within the same subscription type "default" to a n
                                                .swapItemSubscription("default", "price_1Qgpw4CtyihjMHctcKBNCy2e");
 ```
 
-### Subscription Service
-
-To interact with the subscription service, you can use the following code:
-
-```java
-@Autowired 
-SubscriptionServiceFactory subscriptionServiceFactory;
-
-
-SubscriptionService subscriptionService = subscriptionServiceFactory.create();
-
-Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
-subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
-```
-
 ### Cancel Subscription
 
 To cancel a subscription at the end of the period, you can use the following code:
@@ -244,6 +229,21 @@ To check if a subscription has ended, you can use the following code:
 ```java
 userStripe.subscription()
     .ended();
+```
+
+### Subscription Service
+
+To interact with the subscription service, you can use the following code:
+
+```java
+@Autowired 
+SubscriptionServiceFactory subscriptionServiceFactory;
+
+
+SubscriptionService subscriptionService = subscriptionServiceFactory.create();
+
+Optional<Subscription> subscription = subscriptionService.getSubscriptionByUserIdAndType("id", "default");
+subscription.ifPresent(s -> System.out.println("Subscription found: " + s.getType()));
 ```
 
 ## Contributing
