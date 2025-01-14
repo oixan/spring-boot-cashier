@@ -185,7 +185,7 @@ userStripe.subscribe()
   .start();
 ```
 
-### Swap Subscription Item
+#### Swap Subscription Item
 
 To swap the subscription item within the same subscription type "default" to a new price, you can use the following code:
 
@@ -195,7 +195,7 @@ To swap the subscription item within the same subscription type "default" to a n
                                                .swapItemSubscription("default", "price_1Qgpw4CtyihjMHctcKBNCy2e");
 ```
 
-### Cancel Subscription
+#### Cancel Subscription
 
 To cancel a subscription at the end of the period, you can use the following code:
 
@@ -204,7 +204,7 @@ userStripe.subscription()
     .cancelAtPeriodEnd("default");
 ```
 
-### Trial Subscription
+#### Trial Subscription
 
 To check if a subscription is on trial, you can use the following code:
 
@@ -213,7 +213,7 @@ userStripe.subscription()
     .onTrial("default");
 ```
 
-### Grace Period
+#### Grace Period
 
 To check if a subscription is in the grace period, you can use the following code:
 
@@ -222,7 +222,7 @@ userStripe.subscription()
   .onGracePeriod("default");
 ```
 
-### Ended Subscription
+#### Ended Subscription
 
 To check if a subscription has ended, you can use the following code:
 
