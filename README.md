@@ -165,6 +165,16 @@ userStripe.subscribe()
   .start();
 ```
 
+### Swap Subscription Item
+
+To swap the subscription item within the same subscription type "default" to a new price, you can use the following code:
+
+```java
+
+  Subscription stripeSubscription = userStripe.subscription()
+                                               .swapItemSubscription("default", "price_1Qgpw4CtyihjMHctcKBNCy2e");
+```
+
 ### Subscription Service
 
 To interact with the subscription service, you can use the following code:
