@@ -3,6 +3,7 @@ package com.oixan.stripecashier.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.oixan.stripecashier.builder.ChargeBuilder;
 import com.oixan.stripecashier.builder.CheckoutBuilder;
 import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
@@ -36,6 +37,9 @@ public class UserStripeFactory {
 	@Autowired
 	PaymentMethodsManagerFactory paymentMethodsManagerFactory;
 
+    @Autowired
+    ChargeBuilderFactory chargeBuilderFactory;
+
     /**
      * Default constructor for {@code UserStripeFactory}.
      */
@@ -67,6 +71,9 @@ public class UserStripeFactory {
         // Create the PaymentMethodsManager using the CustomerManager
         PaymentMethodsManager paymentMethodsManager = paymentMethodsManagerFactory.create(model);
 
+        
+        ChargeBuilder chargeBuilder = chargeBuilderFactory.create(model);
+
         // Create and return the proxy implementation of IUserStripeAction
         return UserStripeActionProxy.createProxy(
                 model,
@@ -74,7 +81,8 @@ public class UserStripeFactory {
                 subscriptionBuilder,
                 subscriptionManager,
                 customerManager,
-                paymentMethodsManager
+                paymentMethodsManager,
+                chargeBuilder
         );
     }
 }

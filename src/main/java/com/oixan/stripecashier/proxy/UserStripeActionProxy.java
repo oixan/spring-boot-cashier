@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import com.oixan.stripecashier.builder.ChargeBuilder;
 import com.oixan.stripecashier.builder.CheckoutBuilder;
 import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.interfaces.IUserStripe;
@@ -25,6 +26,7 @@ public class UserStripeActionProxy implements InvocationHandler {
     private final SubscriptionManager subscriptionManager;
     private final CustomerManager customerManager;
     private final PaymentMethodsManager paymentMethodsManager;
+    private final ChargeBuilder chargeBuilder;
 
     /**
      * Constructs a new UserStripeActionProxy.
@@ -42,7 +44,8 @@ public class UserStripeActionProxy implements InvocationHandler {
             SubscriptionBuilder subscriptionBuilder,
             SubscriptionManager subscriptionManager,
             CustomerManager customerManager,
-            PaymentMethodsManager paymentMethodsManager
+            PaymentMethodsManager paymentMethodsManager,
+            ChargeBuilder chargeBuilder
     ) {
         this.target = target;
         this.checkoutBuilder = checkoutBuilder;
@@ -50,6 +53,7 @@ public class UserStripeActionProxy implements InvocationHandler {
         this.subscriptionManager = subscriptionManager;
         this.customerManager = customerManager;
         this.paymentMethodsManager = paymentMethodsManager;
+        this.chargeBuilder = chargeBuilder;
     }
 
     /**
@@ -82,6 +86,10 @@ public class UserStripeActionProxy implements InvocationHandler {
         if ("paymentMethod".equals(method.getName())) {
             return paymentMethodsManager;
         }
+        if ("charge".equals(method.getName()))
+        {
+            return chargeBuilder;
+        }
         return method.invoke(target, args); 
     }
 
@@ -103,13 +111,14 @@ public class UserStripeActionProxy implements InvocationHandler {
             SubscriptionBuilder subscriptionBuilder,
             SubscriptionManager subscriptionManager,
             CustomerManager customerManager,
-            PaymentMethodsManager paymentMethodsManager
+            PaymentMethodsManager paymentMethodsManager,
+            ChargeBuilder chargeBuilder
     ) {
         return (IUserStripeAction) Proxy.newProxyInstance(
             target.getClass().getClassLoader(),
             new Class[]{IUserStripeAction.class},
             new UserStripeActionProxy(
-                target, checkoutBuilder, subscriptionBuilder, subscriptionManager, customerManager, paymentMethodsManager)
+                target, checkoutBuilder, subscriptionBuilder, subscriptionManager, customerManager, paymentMethodsManager, chargeBuilder)
         );
     }
 }

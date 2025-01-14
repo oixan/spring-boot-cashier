@@ -15,32 +15,32 @@ public class StripeBuilder {
      * Indicates if subscriptions marked as past due will be deactivated.
      * Defaults to {@code true}.
      */
-    private static boolean deactivatePastDue = true;
+    private boolean deactivatePastDue = true;
 
     /**
      * Indicates if subscriptions marked as incomplete will be deactivated.
      * Defaults to {@code true}.
      */
-    private static boolean deactivateIncomplete = true;
+    private boolean deactivateIncomplete = true;
 
     /**
      * Indicates if taxes will be automatically calculated using Stripe Tax.
      * Defaults to {@code false}.
      */
-    private static boolean calculatesTaxes = false;
+    private boolean calculatesTaxes = false;
 
     /**
      * The default customer model class name.
      * Can be set to define a custom customer model for integration.
      * Defaults to {@code null}.
      */
-    private static String customerModel = null;
+    private String customerModel = null;
 
     /**
      * The default currency used for Stripe transactions.
      * Defaults to {@code "usd"}.
      */
-    private static String currency = "usd";
+    private String currency = "usd";
 
     /**
      * A custom formatter for displaying currency values.
@@ -54,6 +54,96 @@ public class StripeBuilder {
      *
      */
     public StripeBuilder() {
-;
+
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     *
+     * @param formatter the custom currency formatter
+     */
+    public boolean isDeactivatePastDue() {
+        return deactivatePastDue;
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     *
+     * @param formatter the custom currency formatter
+     */
+    public void setDeactivatePastDue(boolean deactivatePastDue) {
+        this.deactivatePastDue = deactivatePastDue;
+    }
+
+    /**
+     * Returns the custom currency formatter for displaying currency values.
+     *
+     * @return the custom currency formatter
+     */
+    public boolean isDeactivateIncomplete() {
+        return deactivateIncomplete;
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     *
+     * @param formatter the custom currency formatter
+     */
+    public void setDeactivateIncomplete(boolean deactivateIncomplete) {
+        this.deactivateIncomplete = deactivateIncomplete;
+    }
+
+    /**
+     * Returns the custom currency formatter for displaying currency values.
+     *
+     * @return the custom currency formatter
+     */
+    public boolean isCalculatesTaxes() {
+        return calculatesTaxes;
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     * 
+     * @param calculatesTaxes
+     */
+    public void setCalculatesTaxes(boolean calculatesTaxes) {
+        this.calculatesTaxes = calculatesTaxes;
+    }
+
+    /**
+     * Returns the custom currency formatter for displaying currency values.
+     *
+     * @return the custom currency formatter
+     */
+    public String getCustomerModel() {
+        return customerModel;
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     *
+     * @param customerModel the custom currency formatter
+     */
+    public void setCustomerModel(String customerModel) {
+        this.customerModel = customerModel;
+    }
+
+    /**
+     * Returns the custom currency formatter for displaying currency values.
+     *
+     * @return the custom currency formatter
+     */
+    public String getCurrency() {
+        return currency;
+    }
+
+    /**
+     * Sets the custom currency formatter for displaying currency values.
+     *
+     * @param currency the custom currency formatter
+     */
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

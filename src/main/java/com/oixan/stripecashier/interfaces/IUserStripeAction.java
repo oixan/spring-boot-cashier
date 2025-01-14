@@ -1,5 +1,6 @@
 package com.oixan.stripecashier.interfaces;
 
+import com.oixan.stripecashier.builder.ChargeBuilder;
 import com.oixan.stripecashier.builder.CheckoutBuilder;
 import com.oixan.stripecashier.builder.SubscriptionBuilder;
 import com.oixan.stripecashier.manager.CustomerManager;
@@ -54,4 +55,11 @@ public interface IUserStripeAction {
      * @return an instance of {@link PaymentMethodsManager} to manage payment methods.
      */
     PaymentMethodsManager paymentMethod();
+
+    /**
+     * Provides access to charge builder functionalities.
+     *
+     * @return an instance of {@link ChargeBuilder} to manage charge methods.
+     */
+    ChargeBuilder charge();
 }
